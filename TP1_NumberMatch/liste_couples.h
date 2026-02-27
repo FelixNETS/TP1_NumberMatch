@@ -10,12 +10,16 @@
 // ainsi que le nb. d'éléments actuels dans la colonne [COL_NB_ELEM] (= 1).
 #ifndef MAX_COUPLES
 #include "utilitaires.h"	//pour les fonctions aléatoires
+#include <cstdio>
+#include <assert.h>
 
 /********************** LES CONSTANTES *************************/
 #define MAX_COUPLES 200		//taille maximale de la liste
 #define LIG_INFOS   0		//position-ligne pour les infos de la liste
 #define COL_TAILLE  0		//position-colonne de la taille totale (à la ligne [0])
 #define COL_NBELEM  1		//position-colonne du nb. d'éléments (à la ligne [0])
+
+#define TEST_LISTE_COUPLES 1	//permet de passer en mode test pour les tests unitaires
 
 /******************* DÉCLARATION DES TYPES *********************/
 //Type-tableau pour la liste. Contient 2 colonnes pour les deux cases à jouer.
@@ -29,7 +33,7 @@ void init_liste_couples(t_liste_couples liste);
 
 //accesseur au nb. d'éléments dans la liste
 //PARAM.: la liste des coups possibles
-//RETOUR: (entier) le nb. d'élémengts actuels
+//RETOUR: (entier) le nb. d'éléments actuels
 int  nb_couples(const t_liste_couples liste);
 
 //permet d'ajouter un nouveau couple à la liste des coups possibles.
