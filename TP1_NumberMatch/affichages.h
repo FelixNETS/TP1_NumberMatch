@@ -1,6 +1,6 @@
 // affichages.h			  (*** ÉCRIRE les 4 premières fonctions ***)
-// Auteur:    
-// Date:
+// Auteur: Jean-Christophe Latreille    
+// Date(derniere modif.) : 13 / 3 / 2026
 // 
 // Module qui gère toutes les fonctions d'affichages du programme pour la grille, 
 // les numéros dispos, le score et messages.  Tous les affichages-écran sont définies ici.
@@ -17,6 +17,11 @@
 #define LIG_CHIFFRES 1					//pos-ligne pour l'affichage de chiffres disponibles
 #define LIG_SAISIE   LIG_GRILLE - 3		//pos-ligne pour la demande et saisie d'une case
 #define LIG_MESSAGES LIG_GRILLE - 2		//pos-ligne pour l'affichage des autres messages
+
+#define NB_POSI_SCORE 3		//nombre de positions pour la valeur du score
+#define NB_POSI_CHIFFRES 2	//nombre de positions a ajouter apres l'mpression d'un chiffre
+
+enum indices_col { A=1, B, C, D, E, F, G, H, I }	// Indices de colonne de la grille de jeu
 
 
 //Permet d'afficher les règles du jeu
