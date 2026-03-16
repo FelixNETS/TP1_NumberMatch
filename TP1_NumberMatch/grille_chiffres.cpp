@@ -281,3 +281,51 @@ void verifier_sens_est(t_grille_nos grille, int ligne, int colonne, t_liste_coup
     }
 }
 
+/*-------------------------- retirer_ligne() ----------------------------*/
+void retirer_ligne(t_grille_nos grille, int no_lig) {
+    int i, j;
+
+    for (i=no_lig; i < MAX_LIG; i++) {
+        if (i != MAX_LIG - 1) {
+            for (j = POS_NB; j < NB_COL; j++) grille[i][j] = grille[i + 1][j];
+            if (grille[i][POS_NB] == 0) break;
+        }
+        else {
+            for (j = POS_NB; j < NB_COL; j++) grille[i][j] = 0;
+        }
+    }
+}
+
+/*------------------------- effacer_chiffre() ---------------------------*/
+void effacer_chiffre(t_grille_nos grille, int pos) {
+    int lig = pos / 10,
+        col = pos % 10;
+    
+    grille[lig][col] = 0;
+    grille[lig][POS_NB] -= 1;
+}
+
+/*------------------------- retirer_chiffre() ---------------------------*/
+int  retirer_chiffre(int ch, t_tab_chiffres nbr_chiffres) {
+    nbr_chiffres[ch] -= 1;
+
+    if (nbr_chiffres[ch] == 0) {
+        nbr_chiffres[POS_NB] -= 1;
+            return ch;
+    }
+    else return 0;
+}
+
+/*------------------------- get_chiffre_case() --------------------------*/
+int  get_chiffre_case(const t_grille_nos grille, int no_case) {
+    int lig = no_case / 10,
+        col = no_case % 10,
+        ch = grille[lig][col];
+    
+    return ch;
+}
+
+/*----------------------- nb_chiffres_restants() ------------------------*/
+int  nb_chiffres_restants(const t_tab_chiffres nbr_chiffres) {
+    return nbr_chiffres[POS_NB];
+}
