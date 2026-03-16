@@ -21,11 +21,11 @@ enum directions { S_OUEST = 1, SUD, S_EST, OUEST, MILIEU, EST, N_OUEST, NORD, N_
 */
 
 #define INC_POS(lig,col)    \
-	if (*(col) == 9) {      \
-		(*(col)) = 0;		\
-		(*(lig))++;		    \
+	if (col == 9) {         \
+		(col) = 0;		    \
+		(lig)++;		    \
 	}						\
-	(*(col))++
+	col++
 
 /*******************FONCTIONS PRIVEES******************/
 
@@ -95,7 +95,7 @@ int init_grille(t_grille_nos grille, t_tab_chiffres nbr_chiffres) {
 
 		for (qte_a_inserer; qte_a_inserer > 0; qte_a_inserer--) {
 
-			INC_POS(&lig, &col); // Passe au prochain index de la grille
+			INC_POS(lig, col); // Passe au prochain index de la grille
 
 			/*Boucle DO WHILE repete tant que l'entier al�atoire g�n�r�
 			* est �gal � ses voisins dans la grille*/
@@ -261,10 +261,10 @@ void verifier_sens_est(t_grille_nos grille, int ligne, int colonne, t_liste_coup
         chiffre_final,
         caseA, caseB;
 
-    INC_POS(&lig2, &col2);
+    INC_POS(lig2, col2);
 
     while (lig2 < MAX_LIG && grille[lig2][POS_NB] != 0 && grille[lig2][col2] == 0) {
-        INC_POS(&lig2, &col2);
+        INC_POS(lig2, col2);
     }
 
     if (lig2 < MAX_LIG && grille[lig2][POS_NB] != 0 && grille[lig2][col2] != 0) {
