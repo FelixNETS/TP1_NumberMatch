@@ -32,8 +32,17 @@
 
 /******************** FONCTIONS PUBLIQUES **********************/
 
+// validation & analyse de la commande saisie par le joueur 
+// fonction privée au module gestion_jeu.cpp
+// PARAMS: la dernière ligne de la grille et le # de la saisie actuelle
+// RETOUR: soit un des code spéciaux ou la position saisie
 int valider_coup(t_liste_couples liste, int derniere_lig, int* caseA, int* caseB);
 
-void jouer_coup(t_liste_couples grille, int* derniere_lig, int caseA, int caseB);
+// validation & analyse de la commande saisie par le joueur 
+// fonction privée au module gestion_jeu.cpp
+// PARAMS: la dernière ligne de la grille et le # de la saisie actuelle
+// RETOUR: soit un des code spéciaux ou la position saisie
+int jouer_coup(t_liste_couples grille, t_tab_chiffres nbr_chiffres,
+	int* derniere_lig, int caseA, int caseB) {
 
 /***************************************************************/

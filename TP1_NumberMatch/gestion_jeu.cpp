@@ -42,6 +42,7 @@ int saisie_case(int derniere_lig, int numero_saisie) {
 		decalage = 0;	// ré-initialisation du décalage décimal
 
 		demander_saisie(numero_saisie);		//Saisie du coup
+		scanf("%s", buff);
 
 		// storage de la longueur de saisie dans une variable
 		// active le décalage décimal SI la saisie est 3 CHAR de long
@@ -82,7 +83,7 @@ int saisie_case(int derniere_lig, int numero_saisie) {
 			continue;
 		}
 
-		// cas 3: chiffre 2 invalide (JUSTE SI SAISIE = 3 DE LONG)
+		// cas 4: chiffre 2 invalide (JUSTE SI SAISIE = 3 DE LONG)
 		if (longueur == 3 && !(buff[2] >= '0' && buff[2] <= '9')) {
 			mess_erreur("ligne inexistante!");
 			continue;
@@ -157,29 +158,82 @@ int valider_coup(t_liste_couples liste, int derniere_lig, int* caseA, int* caseB
 
 /*----------------------- jouer_coup() -------------------------*/
 
-void jouer_coup(t_liste_couples grille, t_tab_chiffres nbr_chiffres,
+int jouer_coup(t_liste_couples grille, t_tab_chiffres nbr_chiffres,
 	int* derniere_lig, int caseA, int caseB) {
 
-	int points = 0,
-		pts_lignes = 0,
-		colA,
-		colB,
-		ligA,
-		ligB;
+	int points = 0,				// points pour le coup joué
+		pts_lignes = 0,			// points pour effacer une ligne
 
-	colA = caseA % 10;
-	colB = caseB % 10;
+		colA,					// colonne de la case A
+		colB,					// colonne de la case B
 
-	ligA = (coup1 / 10) + 1;
-	ligB = (coup2 / 10) + 1;
+		ligA,					// ligne de la case A
+		ligB;					// ligne de la case B
 
+	colA = caseA % 10;			// extrait la colonne A de la position A
+	colB = caseB % 10;			// extrait la colonne B de la position B
+
+	ligA = (caseA / 10) + 1;	// extrait la ligne A de la position A
+	ligB = (caseB / 10) + 1;	// extrait la ligne B de la position B
+
+	// attribution des points par coup. 
+	// si les points sont collés, on attribue 1 point
+	// si les points sont séparés de cases vides, on attribue 4 points
 	if ((abs(colA - colB) <= 1) && (abs(ligA - ligB) <= 1)) {
-		points = 1;
+		points = PTS_COUPLE_VOISIN;
 	}
 	else {
-		points = 4;
+		points = PTS_COUPLE_SEPARE;
 	}
 
-	nbr_chiffres[grille[ligA][colA]]--;
-	nbr_chiffres[grille[ligB][colB]]--;
+	// affichage des points gagnés pour le coup joué
+	mess_points(points);
+
+	// gestion du tableau nbr_chiffres et retrait de la case dans la grille
+	// si retirer_chiffre = non-zéro, retire le chiffre et affiche message de retrait
+	// puis le chiffre dans la case de la grille est effacé
+	if (retirer_chiffre(grille[ligA][colA], nbr_chiffres)) message("chiffre retiré");//TEMPORAIRE***
+	effacer_chiffre(grille, caseA);
+
+	if (retirer_chiffre(grille[ligB][colB], nbr_chiffres)) message("chiffre retiré");//TEMPORAIRE***
+	effacer_chiffre(grille, caseB);
+
+	// on veut que la position caseA soit plus grande que caseB (caseA > caseB)
+	// donc, nous les permutons si c'est le cas inverse
+	if (caseA < caseB) {
+		int temp = caseA;
+		caseA = caseB;
+		caseB = temp;
+	}
+
+	// validation lignes vides, boucles FOR vérifient chaque colonne dans une ligne
+	// la boucle arrête dès qu'elle trouve une valeur non-zéro dans la ligne
+	// si elle se rend à la derière colonne, on ajoute 10 pts, et on retire une ligne
+	for (int i = 1; i < 10; i++) {		// boucle pour position A
+		if (grille[ligA][i]) break;
+		if (i == 9) {
+			pts_lignes += PTS_LIGNE_RETIREE;
+			retirer_ligne(grille, ligA);
+			*derniere_lig--;
+		}
+	}
+
+	if (ligA != ligB) {
+		for (int i = 1; i < 10; i++) {	// boucle pour position B
+			if (grille[ligB][i]) break;
+			if (i == 9) {
+				pts_lignes += PTS_LIGNE_RETIREE;
+				retirer_ligne(grille, ligB);
+				derniere_lig--;
+			}
+		}
+	}
+
+	// si pts_lignes est non-zéro (indiquant qu'uen a été retirée) 
+	// on evoie un message de ligne retirée et les points gagnés
+	if (pts_lignes) {
+		message("n lig retirees. +n points!!!");//TEMPORAIRE***
+	}
+
+	return (points + pts_lignes);		// on retourne la somme des points
 }
