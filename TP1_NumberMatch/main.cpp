@@ -62,6 +62,11 @@ int main(void) {
 				if (nb_regen) regen = 1;
 				else message("il ne vous reste plus de regen!");
 			}
+			else if (caseA == CODE_AIDE) {
+				choix_couple_alea(liste_couples, &caseA, &caseB);
+				afficher_indice(grille, &caseA, &caseB);
+			}
+			else if (caseA == CODE_QUITTER) break;
 		}
 
 		if (regen || (!liste_couples[0][1] && nb_regen)) {
@@ -79,6 +84,12 @@ int main(void) {
 
 		//repete tant qu'on ne quitte pas et qu'il reste des coups a jouer
 	} while (!quitter && liste_couples[0][1]);
+
+	if (!nb_chiffres_restants(nbr_chiffres)) {
+		mess_points(140);
+		score += 140;
+		afficher_infos_jeu(nbr_chiffres, score);
+	}
 
 	mess_fin("PARTIE TERMINEE! score: %d pts", score);
 

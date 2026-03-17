@@ -45,4 +45,6 @@ int valider_coup(t_liste_couples liste, int derniere_lig, int* caseA, int* caseB
 int jouer_coup(t_grille_nos grille, t_tab_chiffres nbr_chiffres,
 	int* derniere_lig, int caseA, int caseB);
 
+void afficher_indice(t_grille_nos grille, int* caseA, int* caseB);
+
 /***************************************************************/

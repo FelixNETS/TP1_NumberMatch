@@ -223,7 +223,7 @@ int jouer_coup(t_grille_nos grille, t_tab_chiffres nbr_chiffres,
 }
 
 /*------------------------- afficher_indice() ---------------------------*/
-void afficher_indice(t_grille_nos grille, int caseA, int caseB) {
+void afficher_indice(t_grille_nos grille, int *caseA, int *caseB) {
 	int colA = caseA % 10,
 		ligA = caseA / 10,
 		valA = grille[colA][ligA];
@@ -239,5 +239,5 @@ void afficher_indice(t_grille_nos grille, int caseA, int caseB) {
 	textcolor(WHITE);
 	printf("Jouez les cases %c%d et %c%d", indA, ligA+1, indB, ligB+1);
 
-	afficher_couple(colA, ligA, chA, colB, ligB, chB);
+	afficher_couple(colA, ligA, valA, colB, ligB, valB);
 }
