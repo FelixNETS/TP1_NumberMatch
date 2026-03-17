@@ -33,7 +33,7 @@ void afficher_instructions() {
     strcpy(texte[7], "ASSIGN. POINTAGE:                 CODES SPECIAUX:     ");
     strcpy(texte[8], "Elim. couple colle:  1  pt        ++: Ajout. Chiffres ");
     strcpy(texte[9], "Elim. couple separe: 4  pts       ??: Indince         ");
-    strcpy(texte[10], "Vide ligne:          10 pts       XX: Quitter         ");
+    strcpy(texte[10], "Vide ligne:          10 pts       XX: Quitter        ");
 
     // boucle FOR pour imprimer le texte bien centré
     // print un buffer (texte vide) de longueur (width - longueur du texte) / 2)
