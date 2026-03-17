@@ -37,6 +37,8 @@
 #define POS_NB  0		 //position du compteur du nb. d'éléments dans un t_tab_chiffres
 						 //ET dans la grille des chiffres (la colonne [0] de chaque ligne)
 
+#define CASE_VIDE 0
+
 
 /******************* DÉCLARATION DES TYPES *********************/
 
@@ -95,6 +97,6 @@ int  nb_chiffres_restants(const t_tab_chiffres nbr_chiffres);
 //Le nombre de chiffres générés pour chaque chiffre sera ajouté à "nbr_chiffres[]".
 //PARAM.: la grille de jeu, la listes des chiffres dispos et une référence à la dernière ligne
 //RETOUR: aucun, mais l'indice de la dernière ligne avec au moins un chiffre sera modifié
-void ajouter_chiffres(t_grille_nos grille, t_tab_chiffres nbr_chiffres, int *dern_lig);
+void ajouter_chiffres(t_grille_nos grille, t_tab_chiffres nbr_chiffres, int* dern_lig);
 
 #endif

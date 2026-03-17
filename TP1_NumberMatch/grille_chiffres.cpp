@@ -29,10 +29,10 @@ enum directions { S_OUEST = 1, SUD, S_EST, OUEST, MILIEU, EST, N_OUEST, NORD, N_
 
 /*******************FONCTIONS PRIVEES******************/
 
-void verifier_huit_directions(t_grille_nos grille, int ligne, int colonne,
+void verifier_huit_directions(const t_grille_nos grille, int ligne, int colonne,
     t_liste_couples liste);
 
-void verifier_sens_est(t_grille_nos grille, int ligne, int colonne, t_liste_couples liste);
+void verifier_sens_est(const t_grille_nos grille, int ligne, int colonne, t_liste_couples liste);
 
 /********* IMPL�MENTATIONS DES FONCTIONS **************/
 
@@ -40,90 +40,90 @@ void verifier_sens_est(t_grille_nos grille, int ligne, int colonne, t_liste_coup
 
 int verifier_ch_voisin(t_grille_nos grille, int lig, int col, int a_inserer) {
 
-	/*Boucle FOR o� i = D�CALAGE LIGNE*/
-	for (int i = -1; i <= 1; i++) {
+    /*Boucle FOR o� i = D�CALAGE LIGNE*/
+    for (int i = -1; i <= 1; i++) {
 
-		/*Boucle FOR o� j = D�CALAGE COLONNE*/
-		for (int j = -1; j <= 1; j++) {
+        /*Boucle FOR o� j = D�CALAGE COLONNE*/
+        for (int j = -1; j <= 1; j++) {
 
-			/*V�rification des bornes avant acc�s au tableau*/
-			if (lig + i < 0 || lig + i >= MAX_LIG) continue;
-			if (col + j < 1 || col + j >= NB_COL) continue;
+            /*V�rification des bornes avant acc�s au tableau*/
+            if (lig + i < 0 || lig + i >= MAX_LIG) continue;
+            if (col + j < 1 || col + j >= NB_COL) continue;
 
-			/*SI la valeur � ins�rer = valeurs des cases adjacentes RETOUR = 0*/
-			if ((grille[lig + i][col + j] == a_inserer) && (i || j)) return 0;
-		}
-	}
-	return 1; //si la fonction trouve aucune valeur �gale adjacente RETOUR = 1
+            /*SI la valeur � ins�rer = valeurs des cases adjacentes RETOUR = 0*/
+            if ((grille[lig + i][col + j] == a_inserer) && (i || j)) return 0;
+        }
+    }
+    return 1; //si la fonction trouve aucune valeur �gale adjacente RETOUR = 1
 }
 
 /*-------------------------- init_grille() ------------------------------*/
 
 int init_grille(t_grille_nos grille, t_tab_chiffres nbr_chiffres) {
 
-	int lig = 0,				 // Coordonn�e y du tableau
-		col = 0,				 // Coordonn�e x du tableau
-		val_a_inserer = 0,		 // Valeur � ins�rer dans la grille
-		qte_a_inserer = 0;		 // Quantit� de valeurs � ins�rer dans la grille
+    int lig = 0,				 // Coordonn�e y du tableau
+        col = 0,				 // Coordonn�e x du tableau
+        val_a_inserer = 0,		 // Valeur � ins�rer dans la grille
+        qte_a_inserer = 0;		 // Quantit� de valeurs � ins�rer dans la grille
 
-	/***************************/
+    /***************************/
 
-	/*Boucle DO WHILE r�-essaie la g�n�ration tant que... 
-	* la grille  ne contient pas chaque chiffre de 1 � 9*/
+    /*Boucle DO WHILE r�-essaie la g�n�ration tant que...
+    * la grille  ne contient pas chaque chiffre de 1 � 9*/
 
-	do { 
+    do {
 
-		lig = 0;				 // R�initialisation des coordonn�es init avant chaque essai
-		col = 0;				 // Sinon, chaque essai d�cale la position des valeurs
+        lig = 0;				 // R�initialisation des coordonn�es init avant chaque essai
+        col = 0;				 // Sinon, chaque essai d�cale la position des valeurs
 
-		/*R�initialisation de la grille et du tableau nbr_chiffres avant chaque essai
-		* Sans cela, les valeurs r�siduelles du pr�c�dent essai corrompraient les r�sultats*/
-		for (int r = 0; r < MAX_LIG; r++)
-			for (int c = 0; c < NB_COL; c++)
-				grille[r][c] = 0;
-		for (int k = 0; k < NB_COL; k++)
-			nbr_chiffres[k] = 0;
+        /*R�initialisation de la grille et du tableau nbr_chiffres avant chaque essai
+        * Sans cela, les valeurs r�siduelles du pr�c�dent essai corrompraient les r�sultats*/
+        for (int r = 0; r < MAX_LIG; r++)
+            for (int c = 0; c < NB_COL; c++)
+                grille[r][c] = 0;
+        for (int k = 0; k < NB_COL; k++)
+            nbr_chiffres[k] = 0;
 
-		/*D�cision al�atoire de la quantit� de valeurs � ins�rer (min = 36 ; max = 45)
-		* La valeur est incr�ment�e de 1 si elle est impaire*/
+        /*D�cision al�atoire de la quantit� de valeurs � ins�rer (min = 36 ; max = 45)
+        * La valeur est incr�ment�e de 1 si elle est impaire*/
 
-		qte_a_inserer = (reel_aleatoire(4.0, 5.0) * 9);
-		if (qte_a_inserer % 2) qte_a_inserer++;
+        qte_a_inserer = (reel_aleatoire(4.0, 5.0) * 9);
+        if (qte_a_inserer % 2) qte_a_inserer++;
 
-		/*Boucle FOR : Ins�re une valeur dans chaque case de la grille
-		* Repete pour autant de fois qu'il y a de valeurs � ins�rer*/
+        /*Boucle FOR : Ins�re une valeur dans chaque case de la grille
+        * Repete pour autant de fois qu'il y a de valeurs � ins�rer*/
 
-		for (qte_a_inserer; qte_a_inserer > 0; qte_a_inserer--) {
+        for (qte_a_inserer; qte_a_inserer > 0; qte_a_inserer--) {
 
-			INC_POS(lig, col); // Passe au prochain index de la grille
+            INC_POS(lig, col); // Passe au prochain index de la grille
 
-			/*Boucle DO WHILE repete tant que l'entier al�atoire g�n�r�
-			* est �gal � ses voisins dans la grille*/
+            /*Boucle DO WHILE repete tant que l'entier al�atoire g�n�r�
+            * est �gal � ses voisins dans la grille*/
 
-			do {
+            do {
 
-				val_a_inserer = entier_aleatoire(1, 9); // Gen. entier entre 1 et 9
+                val_a_inserer = entier_aleatoire(1, 9); // Gen. entier entre 1 et 9
 
-			} while (!verifier_ch_voisin(grille, lig, col, val_a_inserer));
+            } while (!verifier_ch_voisin(grille, lig, col, val_a_inserer));
 
-			grille[lig][col] = val_a_inserer;			// Insertion entier choisi
+            grille[lig][col] = val_a_inserer;			// Insertion entier choisi
 
-			/*Insertion de la quantit� de valeurs par ligne � la colonne 0 de la grille
-			SI on arrive � la derni�re colonne OU � la derni�re valeur ins�r�e*/
+            /*Insertion de la quantit� de valeurs par ligne � la colonne 0 de la grille
+            SI on arrive � la derni�re colonne OU � la derni�re valeur ins�r�e*/
 
-			if ((col == 9) || (qte_a_inserer == 1)) grille[lig][POS_NB] = col;
+            if ((col == 9) || (qte_a_inserer == 1)) grille[lig][POS_NB] = col;
 
-			/*Remplissage du tableau de quantit� de chiffres disponibles
-			* Index 0		: Incr�ment� � la premi�re insertion de chaque valeur
-			* Indexes 1 � 9 : Incr�ment�s � chaque insertion de leur valeur correspondante*/
+            /*Remplissage du tableau de quantit� de chiffres disponibles
+            * Index 0		: Incr�ment� � la premi�re insertion de chaque valeur
+            * Indexes 1 � 9 : Incr�ment�s � chaque insertion de leur valeur correspondante*/
 
-			nbr_chiffres[val_a_inserer]++;
-			if (nbr_chiffres[val_a_inserer] == 1) nbr_chiffres[0]++;
-		}
+            nbr_chiffres[val_a_inserer]++;
+            if (nbr_chiffres[val_a_inserer] == 1) nbr_chiffres[0]++;
+        }
 
-	} while (nbr_chiffres[0] != 9);
+    } while (nbr_chiffres[0] != 9);
 
-	return (lig + 1);
+    return (lig + 1);
 }
 
 /*---------------------- generer_listes_couples() -----------------------*/
@@ -137,7 +137,7 @@ int generer_listes_couples(const t_grille_nos grille, int dern_lig, t_liste_coup
     // les coups possibles et de les ajouter � la liste de coups.
     for (i = 0; i <= dern_lig; i++) {   // Boucle qui passe chaque ligne non-vide
         if (grille[i][POS_NB] != CASE_VIDE) {   // Si la ligne est non-vide (pr�caution)
-            for (j = POS_NB+1; j <NB_COL; j++) {    // Boucle qui passe chaque colonne
+            for (j = POS_NB + 1; j < NB_COL; j++) {    // Boucle qui passe chaque colonne
                 if (grille[i][j] != CASE_VIDE) {    // Si la case est non-vide
                     verifier_huit_directions(grille, i, j, liste);
                 }
@@ -150,7 +150,7 @@ int generer_listes_couples(const t_grille_nos grille, int dern_lig, t_liste_coup
 
 /*-------------------- verifier_huit_directions() -----------------------*/
 
-void verifier_huit_directions(t_grille_nos grille, int ligne, int colonne,
+void verifier_huit_directions(const t_grille_nos grille, int ligne, int colonne,
     t_liste_couples liste) {
 
     int direction,  // Variable de la direction du d�placement
@@ -254,7 +254,7 @@ void verifier_huit_directions(t_grille_nos grille, int ligne, int colonne,
 
 /*------------------------- verifier_sens_est() -------------------------*/
 
-void verifier_sens_est(t_grille_nos grille, int ligne, int colonne, t_liste_couples liste) {
+void verifier_sens_est(const t_grille_nos grille, int ligne, int colonne, t_liste_couples liste) {
     int lig2 = ligne,
         col2 = colonne,
         chiffre_depart = grille[ligne][colonne],
@@ -285,7 +285,7 @@ void verifier_sens_est(t_grille_nos grille, int ligne, int colonne, t_liste_coup
 void retirer_ligne(t_grille_nos grille, int no_lig) {
     int i, j;
 
-    for (i=no_lig; i < MAX_LIG; i++) {
+    for (i = no_lig; i < MAX_LIG; i++) {
         if (i != MAX_LIG - 1) {
             for (j = POS_NB; j < NB_COL; j++) grille[i][j] = grille[i + 1][j];
             if (grille[i][POS_NB] == 0) break;
@@ -300,7 +300,7 @@ void retirer_ligne(t_grille_nos grille, int no_lig) {
 void effacer_chiffre(t_grille_nos grille, int pos) {
     int lig = pos / 10,
         col = pos % 10;
-    
+
     grille[lig][col] = 0;
     grille[lig][POS_NB] -= 1;
 }
@@ -311,7 +311,7 @@ int  retirer_chiffre(int ch, t_tab_chiffres nbr_chiffres) {
 
     if (nbr_chiffres[ch] == 0) {
         nbr_chiffres[POS_NB] -= 1;
-            return ch;
+        return ch;
     }
     else return 0;
 }
@@ -321,7 +321,7 @@ int  get_chiffre_case(const t_grille_nos grille, int no_case) {
     int lig = no_case / 10,
         col = no_case % 10,
         ch = grille[lig][col];
-    
+
     return ch;
 }
 

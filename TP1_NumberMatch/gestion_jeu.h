@@ -14,15 +14,15 @@
 
 /********************** LES CONSTANTES *************************/
 
-#define CODE_CHIFFRES -2	//demander une régénération de nouveaux chiffres 
-#define CODE_AIDE -1		//demander une suggestion d’un coup à jouer 
-#define CODE_QUITTER 0		//code pour quitter le jeu 
+#define CODE_CHIFFRES -2		//demander une régénération de nouveaux chiffres 
+#define CODE_AIDE -1			//demander une suggestion d’un coup à jouer 
+#define CODE_QUITTER 0			//code pour quitter le jeu 
 
-#define PTS_COUPLE_VOISIN  1   //élimination d'un couple de chiffres voisins (distance de 1) 
-#define PTS_COUPLE_SEPARE  4   //élimination d'un couple de chiffres séparés par des espaces 
-#define PTS_LIGNE_RETIREE  10  //élimination d'une ligne vide suite à un retrait de chiffres 
+#define PTS_COUPLE_VOISIN  1	//élimination d'un couple de chiffres voisins (distance de 1) 
+#define PTS_COUPLE_SEPARE  4	//élimination d'un couple de chiffres séparés par des espaces 
+#define PTS_LIGNE_RETIREE  10	//élimination d'une ligne vide suite à un retrait de chiffres 
 
-#define COUP_MAXLONG 3		//quantité maximale de char permis pour l'entrée de coup
+#define COUP_MAXLONG 3			//quantité maximale de char permis pour l'entrée de coup
 
 /****************** DÉCLARATIONS DES MACROS ********************/
 
@@ -42,7 +42,7 @@ int valider_coup(t_liste_couples liste, int derniere_lig, int* caseA, int* caseB
 // fonction privée au module gestion_jeu.cpp
 // PARAMS: la dernière ligne de la grille et le # de la saisie actuelle
 // RETOUR: soit un des code spéciaux ou la position saisie
-int jouer_coup(t_liste_couples grille, t_tab_chiffres nbr_chiffres,
-	int* derniere_lig, int caseA, int caseB) {
+int jouer_coup(t_grille_nos grille, t_tab_chiffres nbr_chiffres,
+	int* derniere_lig, int caseA, int caseB);
 
 /***************************************************************/

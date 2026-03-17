@@ -7,6 +7,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "WinConsole.h"     //NOTE: ne doit PAS �tre inclus nullepart ailleurs dans le projet!
 #include "affichages.h"
 
@@ -23,7 +24,7 @@
 /*****************************************************************************/
 //Affiche le message de demande d'une saisie de case ou commande (sur la ligne 3).
 void demander_saisie(int no_saisie) {
-    gotoxy(COL_GRILLE, LIG_SAISIE);             //saisie sur la ligne 2 de l'�cran
+    gotoxy(COL_MESSAGE, LIG_SAISIE);             //saisie sur la ligne 2 de l'�cran
     printf("Entrer la case %d (eg. A1): ", no_saisie);
     clreol();           //effacer reste de cette ligne
 }
@@ -33,8 +34,8 @@ void demander_saisie(int no_saisie) {
 void message(const char* mess) {
     /* affiche un message d'information � la ligne 3 pendant 3 secondes */
     textcolor(WHITE);   //remise � la couleur BLANC
-    gotoxy(COL_GRILLE, LIG_MESSAGES);
-    printf("%s", mess);   
+    gotoxy(COL_MESSAGE, LIG_MESSAGES);
+    printf("%s", mess);
     clreol();           //effacer le reste de l'ancien message affich� sur cette ligne
     delay(2000);        //= 3 secondes
 }
@@ -43,11 +44,11 @@ void message(const char* mess) {
 void mess_erreur(const char* mess) {
     /* affiche un message d'erreur � la ligne 3 en ROUGE avec clignotements! */
     for (int i = 0; i < 5; i++) {   //faire clignoter 5 fois
-        gotoxy(COL_GRILLE, LIG_MESSAGES);
+        gotoxy(COL_MESSAGE, LIG_MESSAGES);
         textcolor(LIGHTRED);
         printf("%s", mess);         //afficher
         delay(500);
-        gotoxy(COL_GRILLE, LIG_MESSAGES);
+        gotoxy(COL_MESSAGE, LIG_MESSAGES);
         clreol();                   //effacer
         delay(200);
     }
@@ -58,22 +59,47 @@ void mess_erreur(const char* mess) {
 void mess_points(int pts) {
     /* affiche les points obtenus � la ligne 1 en VERT avec clignotements! */
     for (int i = 0; i < 3; i++) {    //faire clignoter 3 fois
-        gotoxy(COL_GRILLE + 20, LIG_POINTS);
+        gotoxy(COL_MESSAGE + 20, LIG_POINTS);
         textcolor(LIGHTGREEN);
         printf("+%d points!!", pts); //afficher
         delay(300);
-        gotoxy(COL_GRILLE + 20, LIG_POINTS);
+        gotoxy(COL_MESSAGE + 20, LIG_POINTS);
         clreol();                    //effacer
         delay(100);
     }
     textcolor(WHITE);  //remise � la couleur BLANC
 }
 
+/*****************************************************************************/
+void mess_num(const char* mess, int num1, int num2, int couleur) {
+
+    for (int i = 0; i < 3; i++) {    //faire clignoter 3 fois
+        gotoxy(COL_MESSAGE, LIG_MESSAGES);
+        textcolor(couleur);
+        printf(mess, num1, num2); //afficher
+        delay(500);
+        gotoxy(COL_MESSAGE, LIG_MESSAGES);
+        clreol();                    //effacer
+        delay(100);
+    }
+    textcolor(WHITE);  //remise � la couleur BLANC
+}
+
+/*****************************************************************************/
+void mess_fin(const char* mess, int pts) {
+    gotoxy(COL_MESSAGE, LIG_MESSAGES);
+    textcolor(YELLOW);
+    printf(mess, pts);
+    delay(2000);
+    textcolor(WHITE);
+    gotoxy(0, 24);
+}
+
 /*********************** IMPLEMENTATION DES FONCTIONS ************************/
 /*****************************************************************************/
 void afficher_infos_jeu(const t_tab_chiffres nbr_chiffres, int pts) {
     int i;  // Compteur pour passer tous les chiffres possibles
-    
+
     char str_score[] = "Score: ";   // Texte pour la ligne de score
     char str_chiffres[] = "Chiffres: "; // Texte pour la ligne des chiffres restants
 
@@ -83,11 +109,13 @@ void afficher_infos_jeu(const t_tab_chiffres nbr_chiffres, int pts) {
         //la moitie de: la longueur du string + nb de cases pour le pointage.
         x_score = centre - ((strlen(str_score) + NB_POSI_SCORE) / 2);
 
+    clrscr();
+
     gotoxy(x_score, LIG_POINTS);    // On va a la position calculee pour centrer le score
     printf("%s%3d", str_score, pts);    // On affiche le texte de score ainsi que les points
 
     // On va a la position calculee pour centrer les chiffres
-    gotoxy(COL_GRILLE, LIG_CHIFFRES);
+    gotoxy(COL_MESSAGE, LIG_CHIFFRES);
     printf("%s", str_chiffres); // On affiche le texte de la ligne de chiffres restants
 
     // Boucle for qui passe chaque chiffre possible
@@ -107,8 +135,7 @@ void afficher_grille(const t_grille_nos grille, int dern_lig) {
     char indices_col[] = "ABCDEFGHI";   // Labels des colonnes A a I (colonnes 1 a 9)
 
     // Afficher les en-tetes de colonnes sur la ligne au-dessus de la grille
-    gotoxy(COL_GRILLE, LIG_GRILLE - 1);
-    printf("   ");  // Espace pour le numero de ligne
+    gotoxy(COL_LETTRES, LIG_GRILLE - 1);
     textcolor(YELLOW);
     for (col = 1; col < NB_COL; col++) {
         printf("%c ", indices_col[col - 1]);
@@ -116,16 +143,19 @@ void afficher_grille(const t_grille_nos grille, int dern_lig) {
     textcolor(WHITE);   // Remise a la couleur BLANC
 
     // Afficher chaque ligne de la grille
-    for (lig = 0; lig <= dern_lig; lig++) {
-        gotoxy(COL_GRILLE, LIG_GRILLE + lig);
-        printf("%2d ", lig + 1);    // Numero de ligne (1-base)
+    for (lig = 0; lig < dern_lig; lig++) {
+
+        //Afficher les numéros de ligne
+        gotoxy(COL_CHIFFRES, LIG_GRILLE + lig);
+        textcolor(YELLOW);
+        printf("%2d", lig + 1);    // Numero de ligne (1-base)
+        textcolor(WHITE);
+
+        //Afficher les chiffres de la grille
         for (col = 1; col < NB_COL; col++) {
-            if (grille[lig][col] != 0) {
-                printf("%d ", grille[lig][col]);    // Afficher le chiffre
-            } else {
-                printf("  ");   // Case vide
-            }
+            gotoxy(COL_GRILLE + (col * 2), LIG_GRILLE + lig);
+            if (grille[lig][col])printf("%d", grille[lig][col]);
+            else printf(" ");
         }
-        clreol();   // Effacer le reste de la ligne
     }
 }

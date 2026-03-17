@@ -1,10 +1,10 @@
 /*
 Module: utilitaires.h   (*** MODULE DONNÉ AUX ÉLÈVES ***)
 
-Description: Module de fonctions utilitaires : 
+Description: Module de fonctions utilitaires :
              Offre une fonction de génération d'un réel aléatoire entre un "min" et "max".
              Offre une fonction de génération d'un entier aléatoire entre un "min" et "max".
-             
+
 Auteur: Anis Boubaker et Eric Thé
 */
 

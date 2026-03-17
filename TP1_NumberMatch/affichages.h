@@ -1,6 +1,6 @@
 // affichages.h			  (*** ÉCRIRE les 4 premières fonctions ***)
-// Auteur: Jean-Christophe Latreille    
-// Date(derniere modif.) : 13 / 3 / 2026
+// Auteur:    
+// Date:
 // 
 // Module qui gère toutes les fonctions d'affichages du programme pour la grille, 
 // les numéros dispos, le score et messages.  Tous les affichages-écran sont définies ici.
@@ -9,8 +9,11 @@
 #include "grille_chiffres.h"    //va aussi inclure le module "liste_couples.h"
 
 //les décalages pour le coin sup. gauche de l'affichage de la grille
-#define LIG_GRILLE  5
-#define COL_GRILLE  40
+#define LIG_GRILLE 5
+#define COL_MESSAGE 40
+#define COL_LETTRES 45
+#define COL_CHIFFRES 41
+#define COL_GRILLE 43
 
 //les autres décalages-lignes pour les différents messages à afficher
 #define LIG_POINTS   0					//pos-ligne pour l'affichage des points accumulés
@@ -18,10 +21,8 @@
 #define LIG_SAISIE   LIG_GRILLE - 3		//pos-ligne pour la demande et saisie d'une case
 #define LIG_MESSAGES LIG_GRILLE - 2		//pos-ligne pour l'affichage des autres messages
 
-#define NB_POSI_SCORE 3		//nombre de positions pour la valeur du score
-#define NB_POSI_CHIFFRES 2	//nombre de positions a ajouter apres l'mpression d'un chiffre
-
-enum indices_col { A=1, B, C, D, E, F, G, H, I }	// Indices de colonne de la grille de jeu
+#define NB_POSI_SCORE 18
+#define NB_POSI_CHIFFRES 2
 
 
 //Permet d'afficher les règles du jeu
@@ -49,12 +50,16 @@ void afficher_couple(int colA, int ligA, int chA, int colB, int ligB, int chB);
 void demander_saisie(int no_saisie);
 
 //Les 3 fonctions suivantes servent à afficher différents messages durant le jeu
-void message(const char * mess);	  //affiche un message d'information (sur la ligne 3) 
+void message(const char* mess);	  //affiche un message d'information (sur la ligne 3) 
 
 void mess_points(int pts);		 	  //affiche le nb. de points ajoutés (sur la ligne 1)
-									  //Ce message sera affiché avec un effet de clignotement
+//Ce message sera affiché avec un effet de clignotement
 
-void mess_erreur(const char * mess);  //affiche un message d'erreur en ROUGE (sur la ligne 3)
-									  //Ce message sera affiché avec un effet de clignotement
+void mess_erreur(const char* mess);  //affiche un message d'erreur en ROUGE (sur la ligne 3)
+//Ce message sera affiché avec un effet de clignotement
+
+void mess_num(const char* mess, int num1, int num2, int couleur);
+
+void mess_fin(const char* mess, int pts);
 
 #endif

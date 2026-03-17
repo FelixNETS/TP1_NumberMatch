@@ -1,7 +1,7 @@
 /*
 Titre: utilitaires.cpp    (*** MODULE DONNÉ AUX ÉLÈVES ***)
-Description: Fonctions du module d'utilitaires, comprenant des fonctions diverses 
-             de génération de nombre aléatoires.
+Description: Fonctions du module d'utilitaires, comprenant des fonctions diverses
+			 de génération de nombre aléatoires.
 Auteur: Anis Boubaker et Eric Thé
 */
 

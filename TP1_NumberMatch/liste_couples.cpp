@@ -14,7 +14,7 @@ void init_liste_couples(t_liste_couples liste) {
     liste[LIG_INFOS][COL_NBELEM] = 0;
 }
 
-int nb_couples(const t_liste_couples liste) {
+int nb_couples(t_liste_couples liste) {
     return liste[LIG_INFOS][COL_NBELEM];
 }
 
@@ -43,7 +43,7 @@ int  liste_contient(t_liste_couples liste, int caseA, int caseB) {
     return 0;
 }
 
-void choix_couple_alea(const t_liste_couples liste, int* caseA, int* caseB) {
+void choix_couple_alea(t_liste_couples liste, int* caseA, int* caseB) {
     int nb_elements = nb_couples(liste),
         i = entier_aleatoire(LIG_INFOS + 1, nb_elements);
     *caseA = liste[i][COL_TAILLE];

@@ -7,6 +7,8 @@
 // validation des coups entrés
 // gestion ds points
 
+#define _CRT_SECURE_NO_WARNINGS
+
 /******************** LIBRAIRIES INCLUSES **********************/
 
 
@@ -17,15 +19,10 @@
 
 /*---------------------- saisie_case() -------------------------*/
 
-// validation & analyse de la commande saisie par le joueur 
-// fonction privée au module gestion_jeu.cpp
-// PARAMS: la dernière ligne de la grille et le # de la saisie actuelle
-// RETOUR: soit un des code spéciaux ou la position saisie
-
 int saisie_case(int derniere_lig, int numero_saisie) {
 
 	bool valide = 0,	// validation de la saisie
-		 decalage = 0;	// sert à décaler un chiffre d'une pos. décimale
+		decalage = 0;	// sert à décaler un chiffre d'une pos. décimale
 
 	int position = 0;	// posisiton correspondante de la saisie
 
@@ -89,13 +86,13 @@ int saisie_case(int derniere_lig, int numero_saisie) {
 			continue;
 		}
 
-		
+
 		/*CALCUL DE LA POSITION SELON LA SAISIE*/
 
 		// la valeur decalage vaut 1 quand la saisie est 3 CHAR de long
 		// et vaut 0 lorsque non.
 		// quand elle vaut 1, elle fait buff[1] x 10 et y ajoute buff[2]
-		
+
 		position = (CHIFFRES_A_VAL(buff[1]) * (pow(10, decalage))) - 1;
 		position += (CHIFFRES_A_VAL(buff[2]) * decalage);
 		position = (position * 10) + LETTRE_A_COL(buff[0]);
@@ -105,7 +102,7 @@ int saisie_case(int derniere_lig, int numero_saisie) {
 			mess_erreur("coup hors grille!");
 			continue;
 		}
-		
+
 		valide = true;	// la postition est validée, la boucle termine
 	}
 
@@ -158,7 +155,7 @@ int valider_coup(t_liste_couples liste, int derniere_lig, int* caseA, int* caseB
 
 /*----------------------- jouer_coup() -------------------------*/
 
-int jouer_coup(t_liste_couples grille, t_tab_chiffres nbr_chiffres,
+int jouer_coup(t_grille_nos grille, t_tab_chiffres nbr_chiffres,
 	int* derniere_lig, int caseA, int caseB) {
 
 	int points = 0,				// points pour le coup joué
@@ -173,8 +170,8 @@ int jouer_coup(t_liste_couples grille, t_tab_chiffres nbr_chiffres,
 	colA = caseA % 10;			// extrait la colonne A de la position A
 	colB = caseB % 10;			// extrait la colonne B de la position B
 
-	ligA = (caseA / 10) + 1;	// extrait la ligne A de la position A
-	ligB = (caseB / 10) + 1;	// extrait la ligne B de la position B
+	ligA = caseA / 10;			// extrait la ligne A de la position A
+	ligB = caseB / 10;			// extrait la ligne B de la position B
 
 	// attribution des points par coup. 
 	// si les points sont collés, on attribue 1 point
@@ -192,48 +189,35 @@ int jouer_coup(t_liste_couples grille, t_tab_chiffres nbr_chiffres,
 	// gestion du tableau nbr_chiffres et retrait de la case dans la grille
 	// si retirer_chiffre = non-zéro, retire le chiffre et affiche message de retrait
 	// puis le chiffre dans la case de la grille est effacé
-	if (retirer_chiffre(grille[ligA][colA], nbr_chiffres)) message("chiffre retiré");//TEMPORAIRE***
+	if (retirer_chiffre(grille[ligA][colA], nbr_chiffres)) mess_num("chiffre %d retire", grille[ligA][colA], 0, 14);
 	effacer_chiffre(grille, caseA);
 
-	if (retirer_chiffre(grille[ligB][colB], nbr_chiffres)) message("chiffre retiré");//TEMPORAIRE***
+	if (retirer_chiffre(grille[ligB][colB], nbr_chiffres)) mess_num("chiffre %d retire", grille[ligB][colB], 0, 14);
 	effacer_chiffre(grille, caseB);
 
 	// on veut que la position caseA soit plus grande que caseB (caseA > caseB)
 	// donc, nous les permutons si c'est le cas inverse
-	if (caseA < caseB) {
-		int temp = caseA;
-		caseA = caseB;
-		caseB = temp;
+	if (ligA < ligB) {
+		int temp = ligA;
+		ligA = ligB;
+		ligB = temp;
 	}
 
-	// validation lignes vides, boucles FOR vérifient chaque colonne dans une ligne
-	// la boucle arrête dès qu'elle trouve une valeur non-zéro dans la ligne
-	// si elle se rend à la derière colonne, on ajoute 10 pts, et on retire une ligne
-	for (int i = 1; i < 10; i++) {		// boucle pour position A
-		if (grille[ligA][i]) break;
-		if (i == 9) {
-			pts_lignes += PTS_LIGNE_RETIREE;
-			retirer_ligne(grille, ligA);
-			*derniere_lig--;
-		}
+	if (grille[ligA][0] == 0) {
+		pts_lignes += PTS_LIGNE_RETIREE;
+		retirer_ligne(grille, ligA);
+		(*derniere_lig)--;
 	}
 
-	if (ligA != ligB) {
-		for (int i = 1; i < 10; i++) {	// boucle pour position B
-			if (grille[ligB][i]) break;
-			if (i == 9) {
-				pts_lignes += PTS_LIGNE_RETIREE;
-				retirer_ligne(grille, ligB);
-				derniere_lig--;
-			}
-		}
+	if ((ligA != ligB) && (grille[ligB][0] == 0)) {
+		pts_lignes += PTS_LIGNE_RETIREE;
+		retirer_ligne(grille, ligB);
+		(*derniere_lig)--;
 	}
 
 	// si pts_lignes est non-zéro (indiquant qu'uen a été retirée) 
 	// on evoie un message de ligne retirée et les points gagnés
-	if (pts_lignes) {
-		message("n lig retirees. +n points!!!");//TEMPORAIRE***
-	}
+	if (pts_lignes) mess_num("%d lignes retirees! +%d points", pts_lignes / 10, pts_lignes, 10);
 
 	return (points + pts_lignes);		// on retourne la somme des points
 }
