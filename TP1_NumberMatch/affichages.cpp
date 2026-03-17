@@ -124,7 +124,8 @@ void mess_fin(const char* mess, int pts) {
 }
 
 /*********************** IMPLEMENTATION DES FONCTIONS ************************/
-/*****************************************************************************/
+
+/*---------------------- afficher_infos_jeu() ---------------------------*/
 void afficher_infos_jeu(const t_tab_chiffres nbr_chiffres, int pts) {
     int i;  // Compteur pour passer tous les chiffres possibles
 
@@ -157,7 +158,8 @@ void afficher_infos_jeu(const t_tab_chiffres nbr_chiffres, int pts) {
     }
 }
 
-/*****************************************************************************/
+
+/*------------------------- afficher_grille() ---------------------------*/
 void afficher_grille(const t_grille_nos grille, int dern_lig) {
     int lig, col;
     char indices_col[] = "ABCDEFGHI";   // Labels des colonnes A a I (colonnes 1 a 9)
@@ -186,4 +188,24 @@ void afficher_grille(const t_grille_nos grille, int dern_lig) {
             else printf(" ");
         }
     }
+}
+
+
+/*------------------------- afficher_couple() ---------------------------*/
+void afficher_couple(int colA, int ligA, int chA, int colB, int ligB, int chB) {
+    gotoxy(colA, ligA);     // On se positionne sur la case A
+    textcolor(BLUE);        // On change la couleur du texte a bleu
+    printf("%d", chA);      // On re-ecrit la valeur de la case A en bleu
+
+    gotoxy(colB, ligB);     // On se positionne sur la case B
+    printf("%d", chB);      // On re-ecrit la valeur de la case B en bleu
+
+    delay(ATT_INDICE);      // On attend
+
+    gotoxy(colA, ligA);     // On se positionne sur la case A
+    textcolor(WHITE);       // On change la couleur du texte a blanc
+    printf("%d", chA);      // On re-ecrit la valeur de la case A en blanc
+
+    gotoxy(colB, ligB);     // On se positionne sur la case B
+    printf("%d", chB);      // On re-ecrit la valeur de la case B en blanc
 }
