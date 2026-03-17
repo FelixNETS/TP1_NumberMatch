@@ -1,5 +1,5 @@
 // affichages.cpp			     
-// Auteur: Jean-Christophe Latreille
+// Auteur: Jean-Christophe Latreille et Felix Nadeau
 // Date(derniere modif.) : 16 / 3 / 2026
 // 
 // Module qui g�re toutes les fonctions d'affichages du programme.
@@ -17,8 +17,36 @@
 
 
 
+/*****************************************************************************/
+void afficher_instructions() {
 
+    char texte[11][100];    // tableau de strings, phrases d'instruction
 
+    // declaration des phrases d'instruction
+    strcpy(texte[0], "***NUMBER MATCH***\n");
+    strcpy(texte[1], "Le but du jeu est d'eliminer des couples de chiffres\n");
+    strcpy(texte[2], "Les couples possibles sont deux chiffres identiques (7 et 7)");
+    strcpy(texte[3], "ou deux chiffres dont la somme est 10 (7 et 3)\n");
+    strcpy(texte[4], "les couples doivent se voir dans une des huit direction cardinales");
+    strcpy(texte[5], "et ne pas avoir d'autres chiffres entre eux pour etre valides\n");
+    strcpy(texte[6], "Si on elimine un ligne complete, elle disparait\n");
+    strcpy(texte[7], "ASSIGN. POINTAGE:                 CODES SPECIAUX:     ");
+    strcpy(texte[8], "Elim. couple colle:  1  pt        ++: Ajout. Chiffres ");
+    strcpy(texte[9], "Elim. couple separe: 4  pts       ??: Indince         ");
+    strcpy(texte[10], "Vide ligne:          10 pts       XX: Quitter         ");
+
+    // boucle FOR pour imprimer le texte bien centré
+    // print un buffer (texte vide) de longueur (width - longueur du texte) / 2)
+    // cela place le curseur a la bonne pos. pour print la phrase centrée
+    // ensuite on imprime chaque phrase du tableau
+    for (int i = 0; i < 11; i++) {
+        printf("%*s%s\n", (WIDTH_CONSOLE - strlen(texte[i])) / 2, "", texte[i]);
+    }
+
+    // ATTENTE DU DEPART
+    gotoxy(10, 22);
+    system("pause");
+}
 
 /******************* LES FONCTIONS SUIVANTES SONT DONN�ES ********************/
 /*****************************************************************************/
