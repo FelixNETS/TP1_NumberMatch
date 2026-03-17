@@ -173,6 +173,9 @@ int jouer_coup(t_grille_nos grille, t_tab_chiffres nbr_chiffres,
 	ligA = caseA / 10;			// extrait la ligne A de la position A
 	ligB = caseB / 10;			// extrait la ligne B de la position B
 
+	char mess_lig[50],
+		mess_ret[50];
+
 	// attribution des points par coup. 
 	// si les points sont collés, on attribue 1 point
 	// si les points sont séparés de cases vides, on attribue 4 points
@@ -189,10 +192,17 @@ int jouer_coup(t_grille_nos grille, t_tab_chiffres nbr_chiffres,
 	// gestion du tableau nbr_chiffres et retrait de la case dans la grille
 	// si retirer_chiffre = non-zéro, retire le chiffre et affiche message de retrait
 	// puis le chiffre dans la case de la grille est effacé
-	if (retirer_chiffre(grille[ligA][colA], nbr_chiffres)) mess_num("chiffre %d retire", grille[ligA][colA], 0, 14);
+	if (retirer_chiffre(grille[ligA][colA], nbr_chiffres)) {
+		sprintf(mess_ret, "chiffre %d retire", grille[ligA][colA]);
+		message(mess_ret);
+	}
 	effacer_chiffre(grille, caseA);
 
-	if (retirer_chiffre(grille[ligB][colB], nbr_chiffres)) mess_num("chiffre %d retire", grille[ligB][colB], 0, 14);
+	if (retirer_chiffre(grille[ligB][colB], nbr_chiffres)) {
+		sprintf(mess_ret, "chiffre %d retire", grille[ligB][colB]);
+		message(mess_ret);
+	}
+
 	effacer_chiffre(grille, caseB);
 
 	// on veut que la position caseA soit plus grande que caseB (caseA > caseB)
@@ -217,27 +227,32 @@ int jouer_coup(t_grille_nos grille, t_tab_chiffres nbr_chiffres,
 
 	// si pts_lignes est non-zéro (indiquant qu'uen a été retirée) 
 	// on evoie un message de ligne retirée et les points gagnés
-	if (pts_lignes) mess_num("%d lignes retirees! +%d points", pts_lignes / 10, pts_lignes, 10);
+	if (pts_lignes) {
+		sprintf(mess_lig, "%d lignes retirees! +%d points", pts_lignes / 10, pts_lignes);
+		message(mess_lig);
+	}
 
 	return (points + pts_lignes);		// on retourne la somme des points
 }
 
 /*------------------------- afficher_indice() ---------------------------*/
 void afficher_indice(t_grille_nos grille, int *caseA, int *caseB) {
-	int colA = caseA % 10,
-		ligA = caseA / 10,
-		valA = grille[colA][ligA];
+	int colA = (*caseA) % 10,
+		ligA = (*caseA) / 10,
+		valA = grille[ligA][colA];
 
-	int	colB = caseB % 10,
-		ligB = caseB / 10,
-		valB = grille[colB][ligB];
+	int	colB = (*caseB) % 10,
+		ligB = (*caseB) / 10,
+		valB = grille[ligB][colB];
 
 	char indA = COL_A_LETTRE(colA),
 		 indB = COL_A_LETTRE(colB);
 
-	gotoxy(COL_MESSAGE, LIG_MESSAGES);
-	textcolor(WHITE);
-	printf("Jouez les cases %c%d et %c%d", indA, ligA+1, indB, ligB+1);
+	char mess[50];
+
+	sprintf(mess, "Jouez les cases %c%d et %c%d", indA, ligA + 1, indB, ligB + 1);
+
+	message(mess);
 
 	afficher_couple(colA, ligA, valA, colB, ligB, valB);
 }

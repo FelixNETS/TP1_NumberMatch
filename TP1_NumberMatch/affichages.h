@@ -60,8 +60,4 @@ void mess_points(int pts);		 	  //affiche le nb. de points ajoutés (sur la ligne
 void mess_erreur(const char* mess);  //affiche un message d'erreur en ROUGE (sur la ligne 3)
 //Ce message sera affiché avec un effet de clignotement
 
-void mess_num(const char* mess, int num1, int num2, int couleur);
-
-void mess_fin(const char* mess, int pts);
-
 #endif

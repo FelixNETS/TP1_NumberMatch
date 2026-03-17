@@ -98,31 +98,6 @@ void mess_points(int pts) {
     textcolor(WHITE);  //remise � la couleur BLANC
 }
 
-/*****************************************************************************/
-void mess_num(const char* mess, int num1, int num2, int couleur) {
-
-    for (int i = 0; i < 3; i++) {    //faire clignoter 3 fois
-        gotoxy(COL_MESSAGE, LIG_MESSAGES);
-        textcolor(couleur);
-        printf(mess, num1, num2); //afficher
-        delay(500);
-        gotoxy(COL_MESSAGE, LIG_MESSAGES);
-        clreol();                    //effacer
-        delay(100);
-    }
-    textcolor(WHITE);  //remise � la couleur BLANC
-}
-
-/*****************************************************************************/
-void mess_fin(const char* mess, int pts) {
-    gotoxy(COL_MESSAGE, LIG_MESSAGES);
-    textcolor(YELLOW);
-    printf(mess, pts);
-    delay(2000);
-    textcolor(WHITE);
-    gotoxy(0, 24);
-}
-
 /*********************** IMPLEMENTATION DES FONCTIONS ************************/
 
 /*---------------------- afficher_infos_jeu() ---------------------------*/
@@ -193,19 +168,19 @@ void afficher_grille(const t_grille_nos grille, int dern_lig) {
 
 /*------------------------- afficher_couple() ---------------------------*/
 void afficher_couple(int colA, int ligA, int chA, int colB, int ligB, int chB) {
-    gotoxy(colA, ligA);     // On se positionne sur la case A
+    gotoxy((2 * colA) + COL_GRILLE, ligA + LIG_GRILLE);     // On se positionne sur la case A
     textcolor(BLUE);        // On change la couleur du texte a bleu
     printf("%d", chA);      // On re-ecrit la valeur de la case A en bleu
 
-    gotoxy(colB, ligB);     // On se positionne sur la case B
+    gotoxy((2 * colB) + COL_GRILLE, ligB + LIG_GRILLE);     // On se positionne sur la case B
     printf("%d", chB);      // On re-ecrit la valeur de la case B en bleu
 
     delay(ATT_INDICE);      // On attend
 
-    gotoxy(colA, ligA);     // On se positionne sur la case A
+    gotoxy((2 * colA) + COL_GRILLE, ligA + LIG_GRILLE);     // On se positionne sur la case A
     textcolor(WHITE);       // On change la couleur du texte a blanc
     printf("%d", chA);      // On re-ecrit la valeur de la case A en blanc
 
-    gotoxy(colB, ligB);     // On se positionne sur la case B
+    gotoxy((2 * colB) + COL_GRILLE, ligB + LIG_GRILLE);     // On se positionne sur la case B
     printf("%d", chB);      // On re-ecrit la valeur de la case B en blanc
 }

@@ -6,6 +6,8 @@
 // programme principal
 // appels aux autres programmes
 
+#define _CRT_SECURE_NO_WARNINGS
+
 /******************** LIBRAIRIES INCLUSES **********************/
 
 
@@ -31,6 +33,9 @@ int main(void) {
 		regen = 0,
 		nb_regen = 3;
 
+	char mess1[50],
+		mess_fin[50];
+
 	// initialisation de la gen. aleatoire
 	init_rand();
 
@@ -54,7 +59,7 @@ int main(void) {
 		// ou si on recoit un code spécial (TEMPORAIRE)
 		// valider coup stall tant qu'on entre pas un coup valide
 		if (generer_listes_couples(grille, derniere_lig, liste_couples)) {
-			if (valider_coup(liste_couples, derniere_lig, &caseA, &caseB == 1)) {
+			if (valider_coup(liste_couples, derniere_lig, &caseA, &caseB) == 1) {
 				score += jouer_coup(grille, nbr_chiffres, &derniere_lig, caseA, caseB);
 			}
 			else if (caseA == CODE_CHIFFRES)
@@ -75,7 +80,8 @@ int main(void) {
 			generer_listes_couples(grille, derniere_lig, liste_couples);
 			regen = 0;
 			nb_regen--;
-			mess_num("il vous reste %d regen.", nb_regen, 0, 15);
+			sprintf(mess1, "il vous reste %d regen.", nb_regen);
+			message(mess1);
 		}
 
 		// actualise les affichages du jeu (textes info. et grille)
@@ -91,8 +97,10 @@ int main(void) {
 		afficher_infos_jeu(nbr_chiffres, score);
 	}
 
-	mess_fin("PARTIE TERMINEE! score: %d pts", score);
+	sprintf(mess_fin, "PARTIE TERMINEE! score: %d pts ", score);
+	message(mess_fin);
 
+	afficher_grille(grille, derniere_lig);
 	system("pause");
 	return EXIT_SUCCESS;
 }
