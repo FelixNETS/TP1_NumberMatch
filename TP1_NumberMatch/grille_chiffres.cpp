@@ -195,14 +195,19 @@ int verifier_ch_voisin(t_grille_nos grille, int lig, int col, int a_inserer) {
 /*---------------------- trouver_fin_chiffres() -------------------------*/
 void trouver_fin_chiffres(t_grille_nos grille, int* ligne, int* colonne) {
 
-    // Parcourir les colonnes de droite a gauche pour trouver la derniere case non-vide
-    for (*colonne = NB_COL - 1; *colonne >= 1; (*colonne)--) {
-        if (grille[*ligne][*colonne] != CASE_VIDE) return;
+    int compte = 0;
+
+    // Parcourir de gauche a droite en comptant les cases non-vides
+    // jusqu'a avoir compte autant de chiffres que l'indique le compteur de la ligne
+    for (*colonne = 1; compte < grille[*ligne][POS_NB]; (*colonne)++) {
+        if (grille[*ligne][*colonne] != CASE_VIDE) compte++;
     }
 
-    // Si la ligne est entierement vide, remonter aux lignes precedentes
-    (*ligne)--;
-    *colonne = 9;
+    // Cas special: la premiere case vide se trouve au debut de la ligne suivante
+    if (*colonne >= NB_COL) {
+        (*ligne)++;
+        *colonne = 1;
+    }
 }
 
 /********* IMPLEMENTATIONS DES FONCTIONS **************/
@@ -352,10 +357,12 @@ int  nb_chiffres_restants(const t_tab_chiffres nbr_chiffres) {
 void ajouter_chiffres(t_grille_nos grille, t_tab_chiffres nbr_chiffres, int* dern_lig) {
 
     int lig = *dern_lig - 1,    // Derniere ligne avec des donnees
-        col = 9,               // Demarre en fin de ligne pour que INC_POS passe a la suivante
+        col,
         val_a_inserer,
         qte_a_inserer,
         i;
+
+    trouver_fin_chiffres(grille, &lig, &col);
 
     // Calcul de la quantite de chiffres a generer
     // (facteur aleatoire * nb de chiffres restants)
@@ -365,9 +372,8 @@ void ajouter_chiffres(t_grille_nos grille, t_tab_chiffres nbr_chiffres, int* der
 
     for (i = qte_a_inserer; qte_a_inserer > 0; qte_a_inserer--) {
 
-        INC_POS(lig, col);
         // Securite: ne pas depasser la grille
-        if (lig >= MAX_LIG) { lig = MAX_LIG - 1; break; }
+        if (lig >= MAX_LIG) break;
 
         // Generer un chiffre disponible (nbr_chiffres[val] > 0) et non-adjacent a sa valeur
         do {
@@ -383,6 +389,8 @@ void ajouter_chiffres(t_grille_nos grille, t_tab_chiffres nbr_chiffres, int* der
 
         // Mise a jour du tableau des chiffres disponibles
         nbr_chiffres[val_a_inserer]++;
+
+        INC_POS(lig, col);
     }
 
     *dern_lig = lig + 1;
