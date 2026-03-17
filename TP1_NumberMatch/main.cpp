@@ -27,7 +27,9 @@ int main(void) {
 		caseA = 0,						// premiere saisie
 		caseB = 0,						// deuxième saisie
 		score = 0,						// pointage du joueur
-		quitter = 0;					// code special
+		quitter = 0,					// code special
+		regen = 0,
+		nb_regen = 3;
 
 	// initialisation de la gen. aleatoire
 	init_rand();
@@ -52,12 +54,23 @@ int main(void) {
 		// ou si on recoit un code spécial (TEMPORAIRE)
 		// valider coup stall tant qu'on entre pas un coup valide
 		if (generer_listes_couples(grille, derniere_lig, liste_couples)) {
-			if (valider_coup(liste_couples, derniere_lig, &caseA, &caseB)) {
+			if (valider_coup(liste_couples, derniere_lig, &caseA, &caseB == 1)) {
 				score += jouer_coup(grille, nbr_chiffres, &derniere_lig, caseA, caseB);
 			}
-			else {
-				break;
+			else if (caseA == CODE_CHIFFRES)
+			{
+				if (nb_regen) regen = 1;
+				else message("il ne vous reste plus de regen!");
 			}
+		}
+
+		if (regen || (!liste_couples[0][1] && nb_regen)) {
+			ajouter_chiffres(grille, nbr_chiffres, &derniere_lig);
+			init_liste_couples(liste_couples);
+			generer_listes_couples(grille, derniere_lig, liste_couples);
+			regen = 0;
+			nb_regen--;
+			mess_num("il vous reste %d regen.", nb_regen, 0, 15);
 		}
 
 		// actualise les affichages du jeu (textes info. et grille)
