@@ -109,7 +109,7 @@ int saisie_case(int derniere_lig, int numero_saisie) {
 	return position;	// retour de la position valide saisie
 }
 
-/*---------------------- valider_coup() ------------------------*/
+/*--------------------------- valider_coup() ----------------------------*/
 
 int valider_coup(t_liste_couples liste, int derniere_lig, int* caseA, int* caseB) {
 
@@ -153,7 +153,7 @@ int valider_coup(t_liste_couples liste, int derniere_lig, int* caseA, int* caseB
 	return 1;
 }
 
-/*----------------------- jouer_coup() -------------------------*/
+/*--------------------------- jouer_coup() ------------------------------*/
 
 int jouer_coup(t_grille_nos grille, t_tab_chiffres nbr_chiffres,
 	int* derniere_lig, int caseA, int caseB) {
@@ -220,4 +220,24 @@ int jouer_coup(t_grille_nos grille, t_tab_chiffres nbr_chiffres,
 	if (pts_lignes) mess_num("%d lignes retirees! +%d points", pts_lignes / 10, pts_lignes, 10);
 
 	return (points + pts_lignes);		// on retourne la somme des points
+}
+
+/*------------------------- afficher_indice() ---------------------------*/
+void afficher_indice(t_grille_nos grille, int caseA, int caseB) {
+	int colA = caseA % 10,
+		ligA = caseA / 10,
+		valA = grille[colA][ligA];
+
+	int	colB = caseB % 10,
+		ligB = caseB / 10,
+		valB = grille[colB][ligB];
+
+	char indA = COL_A_LETTRE(colA),
+		 indB = COL_A_LETTRE(colB);
+
+	gotoxy(COL_MESSAGE, LIG_MESSAGES);
+	textcolor(WHITE);
+	printf("Jouez les cases %c%d et %c%d", indA, ligA+1, indB, ligB+1);
+
+	afficher_couple(colA, ligA, chA, colB, ligB, chB);
 }
