@@ -51,11 +51,14 @@ int main(void) {
 		// on sort de la boucle s'il ne reste plus de couples valides
 		// ou si on recoit un code spécial (TEMPORAIRE)
 		// valider coup stall tant qu'on entre pas un coup valide
-		if (!generer_listes_couples(grille, derniere_lig, liste_couples)) break;
-		if (!valider_coup(liste_couples, derniere_lig, &caseA, &caseB)) break;
-
-		// si le coup saisi est valide, on le joue
-		score += jouer_coup(grille, nbr_chiffres, &derniere_lig, caseA, caseB);
+		if (generer_listes_couples(grille, derniere_lig, liste_couples)) {
+			if (valider_coup(liste_couples, derniere_lig, &caseA, &caseB)) {
+				score += jouer_coup(grille, nbr_chiffres, &derniere_lig, caseA, caseB);
+			}
+			else {
+				break;
+			}
+		}
 
 		// actualise les affichages du jeu (textes info. et grille)
 		afficher_infos_jeu(nbr_chiffres, score);
