@@ -14,6 +14,7 @@
 #define COL_LETTRES 45
 #define COL_CHIFFRES 41
 #define COL_GRILLE 43
+#define CENTRE_X 50
 
 //les autres décalages-lignes pour les différents messages à afficher
 #define LIG_POINTS   0					//pos-ligne pour l'affichage des points accumulés

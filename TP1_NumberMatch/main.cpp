@@ -18,34 +18,51 @@
 
 int main(void) {
 
-	t_grille_nos grille;
-	t_liste_couples liste_couples;
-	t_tab_chiffres nbr_chiffres = { 0,0,0,0,0,0,0,0,0,0 };
+	t_grille_nos grille;				// grille de jeu	
+	t_liste_couples liste_couples;		// liste des couples valides
+	t_tab_chiffres nbr_chiffres =		// qté de chaque chiffre dispo
+	{ 0,0,0,0,0,0,0,0,0,0 };
 
-	int derniere_lig,
-		caseA = 0,
-		caseB = 0,
-		score = 0,
-		quitter = 0;
+	int derniere_lig,					// dernière ligne de la grille
+		caseA = 0,						// premiere saisie
+		caseB = 0,						// deuxième saisie
+		score = 0,						// pointage du joueur
+		quitter = 0;					// code special
 
+	// initialisation de la gen. aleatoire
 	init_rand();
+
+	// initialisation de la grille de jeu, actualise de la derniere ligne
 	derniere_lig = init_grille(grille, nbr_chiffres);
 
+	// affichage du texte d'instruction
+	afficher_instructions();
+
+	// affichages du jeu (textes info. et grille)
 	afficher_infos_jeu(nbr_chiffres, score);
 	afficher_grille(grille, derniere_lig);
 
+	// boucle DO WHILE de jeu. repete tant que la partie continue
 	do {
+
+		// actualise la liste des couples valides
 		init_liste_couples(liste_couples);
 
+		// on sort de la boucle s'il ne reste plus de couples valides
+		// ou si on recoit un code spécial (TEMPORAIRE)
+		// valider coup stall tant qu'on entre pas un coup valide
 		if (!generer_listes_couples(grille, derniere_lig, liste_couples)) break;
 		if (!valider_coup(liste_couples, derniere_lig, &caseA, &caseB)) break;
 
+		// si le coup saisi est valide, on le joue
 		score += jouer_coup(grille, nbr_chiffres, &derniere_lig, caseA, caseB);
 
+		// actualise les affichages du jeu (textes info. et grille)
 		afficher_infos_jeu(nbr_chiffres, score);
 		afficher_grille(grille, derniere_lig);
 
-	} while (!quitter && nbr_chiffres[0] && liste_couples && liste_couples[0][1]);
+		//repete tant qu'on ne quitte pas et qu'il reste des coups a jouer
+	} while (!quitter && liste_couples[0][1]);
 
 	mess_fin("PARTIE TERMINEE! score: %d pts", score);
 
