@@ -1,22 +1,22 @@
-// grille_chiffres.h		(*** FICHIER DONNÉ ***)
-// Auteur: Eric Thé, déc. 2025
+// grille_chiffres.h		(*** FICHIER DONNï¿½ ***)
+// Auteur: Eric Thï¿½, dï¿½c. 2025
 // 
-// Module qui gère la grille des chiffres ainsi que la liste des chiffres encore disponibles.
+// Module qui gï¿½re la grille des chiffres ainsi que la liste des chiffres encore disponibles.
 // Format de la grille: 
 //  - la colonne [POS_NB] (= [0]) de chaque ligne contient le nb. de chiffres sur cette ligne
 // 
 // Format de la liste des chiffres dispos.:
-//  - la case [POS_NB] (= [0]) du tableau contient le nb. de chiffres restants (= 9 au départ)
-//  - les autres cases indiquent le nb. de fois que chaque chiffre est présent dans la grille
+//  - la case [POS_NB] (= [0]) du tableau contient le nb. de chiffres restants (= 9 au dï¿½part)
+//  - les autres cases indiquent le nb. de fois que chaque chiffre est prï¿½sent dans la grille
 //    eg. si la case [1] contient 4, cela indique qu'il y a 4 fois le chiffre '1' dans le jeu 
 //
 // Offre des fonctions qui permettent de:
 //  - initialiser la grille
-//  - ajouter de nouveaux chiffres alea. lorsque nécessaire ou demandé
-//  - générer la liste des couples possibles à jouer
+//  - ajouter de nouveaux chiffres alea. lorsque nï¿½cessaire ou demandï¿½
+//  - gï¿½nï¿½rer la liste des couples possibles ï¿½ jouer
 //  - retirer un chiffre dans la grille
 //  - retirer un chiffre de la liste des chiffres dispos
-//  - obtenir le chiffre se trouvant dans une case donnée de la grille
+//  - obtenir le chiffre se trouvant dans une case donnï¿½e de la grille
 
 #ifndef OK_GRILLE
 #define OK_GRILLE  
@@ -28,19 +28,19 @@
 /********************** LES CONSTANTES *************************/
 
 //Les deux dimensions de la grille de jeu
-#define NB_COL  10		 //10 = la colonne du nb. chiffres + 9 chiffres (colonnes [1] à [9])
-#define MAX_LIG 20		 //20 lignes de chiffres max. (à partir de [0])
+#define NB_COL  10		 //10 = la colonne du nb. chiffres + 9 chiffres (colonnes [1] ï¿½ [9])
+#define MAX_LIG 20		 //20 lignes de chiffres max. (ï¿½ partir de [0])
 
-#define MIN_NB_NOUV 1.5	 //facteur du nb. minimum de chiffres à regénérer (commande "++")
-#define MAX_NB_NOUV 5.0	 //facteur du nb. maximum de chiffres à regénérer
+#define MIN_NB_NOUV 1.5	 //facteur du nb. minimum de chiffres ï¿½ regï¿½nï¿½rer (commande "++")
+#define MAX_NB_NOUV 5.0	 //facteur du nb. maximum de chiffres ï¿½ regï¿½nï¿½rer
 
-#define POS_NB  0		 //position du compteur du nb. d'éléments dans un t_tab_chiffres
+#define POS_NB  0		 //position du compteur du nb. d'ï¿½lï¿½ments dans un t_tab_chiffres
 						 //ET dans la grille des chiffres (la colonne [0] de chaque ligne)
 
-#define CASE_VIDE 0
+#define CASE_VIDE 0		 //valeur reprï¿½sentant une case vide dans la grille
 
 
-/******************* DÉCLARATION DES TYPES *********************/
+/******************* Dï¿½CLARATION DES TYPES *********************/
 
 //Type-tableau pour la grille de jeu (tableau 2D)
 typedef int t_grille_nos[MAX_LIG][NB_COL];
@@ -49,41 +49,41 @@ typedef int t_grille_nos[MAX_LIG][NB_COL];
 typedef int t_tab_chiffres[NB_COL];
 
 
-/***************** DÉCLARATIONS DES FONCTIONS ******************/
+/***************** Dï¿½CLARATIONS DES FONCTIONS ******************/
 
-//Reçoit une grille vide et génére les premieres lignes de chiffres alea.
-//Le nombre de chiffres générés pour chaque chiffre sera retenu dans "nbr_chiffres[]"
-//PARAM.: la grille de jeu à remplir et la listes des chiffres dispos
-//RETOUR: l'indice de la dernière ligne avec au moins un chiffre après l'initialisation
+//Reï¿½oit une grille vide et gï¿½nï¿½re les premieres lignes de chiffres alea.
+//Le nombre de chiffres gï¿½nï¿½rï¿½s pour chaque chiffre sera retenu dans "nbr_chiffres[]"
+//PARAM.: la grille de jeu ï¿½ remplir et la listes des chiffres dispos
+//RETOUR: l'indice de la derniï¿½re ligne avec au moins un chiffre aprï¿½s l'initialisation
 int init_grille(t_grille_nos grille, t_tab_chiffres nbr_chiffres);
 
-//Permet de générer la liste de tous les coups (couples) possibles à jouer.
-//PARAM.: la grille de jeu, sa dernière ligne et la listes des coups possibles à remplir
-//RETOUR: Le nombre de couples possibles répertoriés pour le prochain coup à jouer
+//Permet de gï¿½nï¿½rer la liste de tous les coups (couples) possibles ï¿½ jouer.
+//PARAM.: la grille de jeu, sa derniï¿½re ligne et la listes des coups possibles ï¿½ remplir
+//RETOUR: Le nombre de couples possibles rï¿½pertoriï¿½s pour le prochain coup ï¿½ jouer
 int generer_listes_couples(const t_grille_nos grille, int dern_lig, t_liste_couples liste);
 
 //Permet de retirer la ligne vide [no_lig] de la grille des chiffres.
-//Les lignes suivantes seront toutes recopiée UNE ligne plus haut pour remplir l'espace vide.
-//PARAM.: la grille de jeu et l'indice de la ligne vide à supprimer
+//Les lignes suivantes seront toutes recopiï¿½e UNE ligne plus haut pour remplir l'espace vide.
+//PARAM.: la grille de jeu et l'indice de la ligne vide ï¿½ supprimer
 //RETOUR: aucun
 void retirer_ligne(t_grille_nos grille, int no_lig);
 
-//Permet d'effacer (mettre à zéro) la case "pos" de la grille de jeu.
-//Le nb. de chiffres de cette ligne sera aussi décrémenté (dans la colonne [0] de cette ligne)
-//PARAM.: la grille de jeu et la position de la case à vider (eg. 24 == case [2][4])
+//Permet d'effacer (mettre ï¿½ zï¿½ro) la case "pos" de la grille de jeu.
+//Le nb. de chiffres de cette ligne sera aussi dï¿½crï¿½mentï¿½ (dans la colonne [0] de cette ligne)
+//PARAM.: la grille de jeu et la position de la case ï¿½ vider (eg. 24 == case [2][4])
 //RETOUR: aucun
 void effacer_chiffre(t_grille_nos grille, int pos);
 
-//Permet de retirer (mettre à zéro) le chiffre "ch" de la liste des chiffres dispos.
-//Apès ce retrait ce chiffre ne sera plus généré lors des prochaines regénérations de chiffres
-//Le nb. de chiffres dispos du tableau sera aussi décrémenté (compteur dans la case [0])
-//PARAM.: le chiffre à retirer et la listes des chiffres dispos
-//RETOUR: retour du même chiffre "ch" si ce chiffre n'est plus présent dans le jeu, 0 sinon.
+//Permet de retirer (mettre ï¿½ zï¿½ro) le chiffre "ch" de la liste des chiffres dispos.
+//Apï¿½s ce retrait ce chiffre ne sera plus gï¿½nï¿½rï¿½ lors des prochaines regï¿½nï¿½rations de chiffres
+//Le nb. de chiffres dispos du tableau sera aussi dï¿½crï¿½mentï¿½ (compteur dans la case [0])
+//PARAM.: le chiffre ï¿½ retirer et la listes des chiffres dispos
+//RETOUR: retour du mï¿½me chiffre "ch" si ce chiffre n'est plus prï¿½sent dans le jeu, 0 sinon.
 int  retirer_chiffre(int ch, t_tab_chiffres nbr_chiffres);
 
-//Accesseur au chiffre se trouvant à la case "no_case" de la grille.
-//PARAM.: la grille de jeu et la position de la case désirée (eg. 24 == case [2][4])
-//RETOUR: (entier) le chiffre qui se trouve à cette position de la grille
+//Accesseur au chiffre se trouvant ï¿½ la case "no_case" de la grille.
+//PARAM.: la grille de jeu et la position de la case dï¿½sirï¿½e (eg. 24 == case [2][4])
+//RETOUR: (entier) le chiffre qui se trouve ï¿½ cette position de la grille
 int  get_chiffre_case(const t_grille_nos grille, int no_case);
 
 //Accesseur au nb. de chiffres restants dans le jeu (la case [0] du tableau).
@@ -92,11 +92,11 @@ int  get_chiffre_case(const t_grille_nos grille, int no_case);
 //RETOUR: (entier) le nb. de chiffres encore disponibles
 int  nb_chiffres_restants(const t_tab_chiffres nbr_chiffres);
 
-//Permet de générer de nouveau chiffres alea. qui seront ajoutés à la suite des
+//Permet de gï¿½nï¿½rer de nouveau chiffres alea. qui seront ajoutï¿½s ï¿½ la suite des
 //chiffre restants dans la grille de jeu.
-//Le nombre de chiffres générés pour chaque chiffre sera ajouté à "nbr_chiffres[]".
-//PARAM.: la grille de jeu, la listes des chiffres dispos et une référence à la dernière ligne
-//RETOUR: aucun, mais l'indice de la dernière ligne avec au moins un chiffre sera modifié
+//Le nombre de chiffres gï¿½nï¿½rï¿½s pour chaque chiffre sera ajoutï¿½ ï¿½ "nbr_chiffres[]".
+//PARAM.: la grille de jeu, la listes des chiffres dispos et une rï¿½fï¿½rence ï¿½ la derniï¿½re ligne
+//RETOUR: aucun, mais l'indice de la derniï¿½re ligne avec au moins un chiffre sera modifiï¿½
 void ajouter_chiffres(t_grille_nos grille, t_tab_chiffres nbr_chiffres, int* dern_lig);
 
 #endif

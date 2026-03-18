@@ -1,10 +1,10 @@
 // gestion_jeu.cpp
-// auteur: Félix Nadeau
-// date (dernière modif.): 13/3/2026
+// auteur: Fï¿½lix Nadeau
+// date (derniï¿½re modif.): 16/3/2026
 // 
 // FICHIER PROGRAMME
-// gestion générale du fonctionnement 
-// validation des coups entrés
+// gestion gï¿½nï¿½rale du fonctionnement 
+// validation des coups entrï¿½s
 // gestion ds points
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -18,37 +18,42 @@
 /************************* FONCTIONS ****************************/
 
 /*---------------------- saisie_case() -------------------------*/
+//Saisit et valide l'adresse d'une case (ex. "A1") ou un code-commande ("++", "??", "XX").
+//Repï¿½te la demande tant que la saisie n'est pas jugï¿½e valide.
+//NOTE: fonction privï¿½e au module gestion_jeu.cpp
+//PARAM.: la derniï¿½re ligne active de la grille, le numï¿½ro de la saisie (1 ou 2)
+//RETOUR: la position-case valide (entier) ou un code-commande (CODE_QUITTER/AIDE/CHIFFRES)
 
 int saisie_case(int derniere_lig, int numero_saisie) {
 
-	bool valide = 0,	// validation de la saisie
-		decalage = 0;	// sert à décaler un chiffre d'une pos. décimale
+	bool valide = 0,    // indicateur : 1 si la saisie est validï¿½e, 0 sinon
+		decalage = 0;   // vaut 1 si la ligne a 2 chiffres (saisie 3 car.); 0 sinon
 
-	int position = 0;	// posisiton correspondante de la saisie
+	int position = 0;   // position encodï¿½e (lig*10+col) calculï¿½e ï¿½ partir de la saisie
 
-	char buff[10];		// string de longueur 10. store la saisie
-	strcpy(buff, "");	// initialisation du string
+	char buff[10];      // tampon de 10 caractï¿½res pour stocker la saisie utilisateur
+	strcpy(buff, "");   // initialisation du tampon ï¿½ chaï¿½ne vide
 
 
-	/*BOULCLE WHILE Validation de la saisie entrée
-	* continue tant que la saisie n'est pas déterminée valide */
+	/*BOULCLE WHILE Validation de la saisie entrï¿½e
+	* continue tant que la saisie n'est pas dï¿½terminï¿½e valide */
 
 	while (!valide) {
 
-		position = 0;	// ré-initialisation de la position
-		decalage = 0;	// ré-initialisation du décalage décimal
+		position = 0;	// rï¿½-initialisation de la position
+		decalage = 0;	// rï¿½-initialisation du dï¿½calage dï¿½cimal
 
 		demander_saisie(numero_saisie);		//Saisie du coup
 		scanf("%s", buff);
 
-		// storage de la longueur de saisie dans une variable
-		// active le décalage décimal SI la saisie est 3 CHAR de long
-		// (car ça veut dire que la ligne saisie a 2 digits)
-		int longueur = strlen(buff);
+		// stockage de la longueur de saisie dans une variable
+		// active le dï¿½calage dï¿½cimal SI la saisie est 3 CHAR de long
+		// (car ï¿½a veut dire que la ligne saisie a 2 digits)
+		int longueur = strlen(buff); // nb. de caractï¿½res saisis par l'utilisateur
 		if (longueur == 3) decalage = 1;
 
 		// force les lettres saisies en majuscule
-		// (inclut buff[1] au cas où on saisi XX)
+		// (inclut buff[1] au cas oï¿½ on saisi XX)
 		buff[0] = toupper(buff[0]);
 		buff[1] = toupper(buff[1]);
 
@@ -74,7 +79,7 @@ int saisie_case(int derniere_lig, int numero_saisie) {
 			continue;
 		}
 
-		// cas 3: chiffre 1 invalide (valide = 1 à 9)
+		// cas 3: chiffre 1 invalide (valide = 1 ï¿½ 9)
 		if (!(buff[1] > '0' && buff[1] <= '9')) {
 			mess_erreur("ligne inexistante!");
 			continue;
@@ -103,7 +108,7 @@ int saisie_case(int derniere_lig, int numero_saisie) {
 			continue;
 		}
 
-		valide = true;	// la postition est validée, la boucle termine
+		valide = true;	// la postition est validï¿½e, la boucle termine
 	}
 
 	return position;	// retour de la position valide saisie
@@ -113,10 +118,11 @@ int saisie_case(int derniere_lig, int numero_saisie) {
 
 int valider_coup(t_liste_couples liste, int derniere_lig, int* caseA, int* caseB) {
 
-	bool couple_valide = 0;		// 0 = couple invalide; 1 = couple valide
+	bool couple_valide = 0; // indicateur : 1 si le couple est valide, 0 sinon
+	int i;                  // indice de parcours de la liste des couples
 
-	// Boucle WHILE de validation. répète tant que le joueur
-	// n'entre pas un coup valide OU un des codes spéciaux
+	// Boucle WHILE de validation. rï¿½pï¿½te tant que le joueur
+	// n'entre pas un coup valide OU un des codes spï¿½ciaux
 
 	while (!couple_valide) {
 
@@ -129,11 +135,11 @@ int valider_coup(t_liste_couples liste, int derniere_lig, int* caseA, int* caseB
 
 		*caseB = saisie_case(derniere_lig, 2);	// demande du 2ieme coup
 
-		// Boucle FOR vérification de la liste des couples valides
+		// Boucle FOR vï¿½rification de la liste des couples valides
 
-		for (int i = 1; i <= liste[0][1]; i++) {
+		for (i = 1; i <= liste[0][1]; i++) {
 
-			// si le couple entré est dans la liste des couples valides
+			// si le couple entrï¿½ est dans la liste des couples valides
 			// PEU IMPORTE L'ORDRE on valide le couple et sort du FOR
 			if ((*caseA == liste[i][0]) && (*caseB == liste[i][1])) {
 				couple_valide = 1;
@@ -158,14 +164,14 @@ int valider_coup(t_liste_couples liste, int derniere_lig, int* caseA, int* caseB
 int jouer_coup(t_grille_nos grille, t_tab_chiffres nbr_chiffres,
 	int* derniere_lig, int caseA, int caseB) {
 
-	int points = 0,				// points pour le coup joué
-		pts_lignes = 0,			// points pour effacer une ligne
+	int points = 0,     // points obtenus pour le retrait du couple de cases
+		pts_lignes = 0, // points supplï¿½mentaires pour chaque ligne vide retirï¿½e
 
-		colA,					// colonne de la case A
-		colB,					// colonne de la case B
+		colA,           // indice de colonne de la case A (extrait de caseA)
+		colB,           // indice de colonne de la case B (extrait de caseB)
 
-		ligA,					// ligne de la case A
-		ligB;					// ligne de la case B
+		ligA,           // indice de ligne de la case A (extrait de caseA)
+		ligB;           // indice de ligne de la case B (extrait de caseB)
 
 	colA = caseA % 10;			// extrait la colonne A de la position A
 	colB = caseB % 10;			// extrait la colonne B de la position B
@@ -173,12 +179,12 @@ int jouer_coup(t_grille_nos grille, t_tab_chiffres nbr_chiffres,
 	ligA = caseA / 10;			// extrait la ligne A de la position A
 	ligB = caseB / 10;			// extrait la ligne B de la position B
 
-	char mess_lig[50],
-		mess_ret[50];
+	char mess_lig[50],  // tampon pour le message de ligne(s) retirï¿½e(s)
+		mess_ret[50];   // tampon pour le message de chiffre retirï¿½
 
 	// attribution des points par coup. 
-	// si les points sont collés, on attribue 1 point
-	// si les points sont séparés de cases vides, on attribue 4 points
+	// si les points sont collï¿½s, on attribue 1 point
+	// si les points sont sï¿½parï¿½s de cases vides, on attribue 4 points
 	if ((abs(colA - colB) <= 1) && (abs(ligA - ligB) <= 1)) {
 		points = PTS_COUPLE_VOISIN;
 	}
@@ -186,12 +192,12 @@ int jouer_coup(t_grille_nos grille, t_tab_chiffres nbr_chiffres,
 		points = PTS_COUPLE_SEPARE;
 	}
 
-	// affichage des points gagnés pour le coup joué
+	// affichage des points gagnï¿½s pour le coup jouï¿½
 	mess_points(points);
 
 	// gestion du tableau nbr_chiffres et retrait de la case dans la grille
-	// si retirer_chiffre = non-zéro, retire le chiffre et affiche message de retrait
-	// puis le chiffre dans la case de la grille est effacé
+	// si retirer_chiffre = non-zï¿½ro, retire le chiffre et affiche message de retrait
+	// puis le chiffre dans la case de la grille est effacï¿½
 	if (retirer_chiffre(grille[ligA][colA], nbr_chiffres)) {
 		sprintf(mess_ret, "chiffre %d retire", grille[ligA][colA]);
 		message(mess_ret);
@@ -208,7 +214,7 @@ int jouer_coup(t_grille_nos grille, t_tab_chiffres nbr_chiffres,
 	// on veut que la position caseA soit plus grande que caseB (caseA > caseB)
 	// donc, nous les permutons si c'est le cas inverse
 	if (ligA < ligB) {
-		int temp = ligA;
+		int temp = ligA;    // variable temporaire pour la permutation de ligA et ligB
 		ligA = ligB;
 		ligB = temp;
 	}
@@ -225,8 +231,8 @@ int jouer_coup(t_grille_nos grille, t_tab_chiffres nbr_chiffres,
 		(*derniere_lig)--;
 	}
 
-	// si pts_lignes est non-zéro (indiquant qu'uen a été retirée) 
-	// on evoie un message de ligne retirée et les points gagnés
+	// si pts_lignes est non-zï¿½ro (indiquant qu'uen a ï¿½tï¿½ retirï¿½e) 
+	// on evoie un message de ligne retirï¿½e et les points gagnï¿½s
 	if (pts_lignes) {
 		sprintf(mess_lig, "%d lignes retirees! +%d points", pts_lignes / 10, pts_lignes);
 		message(mess_lig);
@@ -237,18 +243,18 @@ int jouer_coup(t_grille_nos grille, t_tab_chiffres nbr_chiffres,
 
 /*------------------------- afficher_indice() ---------------------------*/
 void afficher_indice(t_grille_nos grille, int *caseA, int *caseB) {
-	int colA = (*caseA) % 10,
-		ligA = (*caseA) / 10,
-		valA = grille[ligA][colA];
+	int colA = (*caseA) % 10,  // colonne de la case A (extrait de caseA)
+		ligA = (*caseA) / 10,  // ligne de la case A (extrait de caseA)
+		valA = grille[ligA][colA]; // valeur du chiffre se trouvant en case A
 
-	int	colB = (*caseB) % 10,
-		ligB = (*caseB) / 10,
-		valB = grille[ligB][colB];
+	int	colB = (*caseB) % 10,  // colonne de la case B (extrait de caseB)
+		ligB = (*caseB) / 10,  // ligne de la case B (extrait de caseB)
+		valB = grille[ligB][colB]; // valeur du chiffre se trouvant en case B
 
-	char indA = COL_A_LETTRE(colA),
-		 indB = COL_A_LETTRE(colB);
+	char indA = COL_A_LETTRE(colA), // lettre correspondant ï¿½ la colonne de la case A
+		 indB = COL_A_LETTRE(colB); // lettre correspondant ï¿½ la colonne de la case B
 
-	char mess[50];
+	char mess[50];  // tampon pour le message texte du coup suggï¿½rï¿½
 
 	sprintf(mess, "Jouez les cases %c%d et %c%d", indA, ligA + 1, indB, ligB + 1);
 

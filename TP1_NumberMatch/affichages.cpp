@@ -8,10 +8,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "WinConsole.h"     //NOTE: ne doit PAS �tre inclus nullepart ailleurs dans le projet!
+//NOTE: WinConsole.h ne doit PAS �tre inclus ailleurs dans le projet!
+#include "WinConsole.h"
 #include "affichages.h"
 
-#define CH_MAX  9           //le chiffre maximal � afficher
+#define CH_MAX  9   //le chiffre maximal affich� dans la grille (chiffres 1 � 9)
 
 /*****************************************************************************/
 
@@ -20,7 +21,10 @@
 /*****************************************************************************/
 void afficher_instructions() {
 
-    char texte[11][100];    // tableau de strings, phrases d'instruction
+    int i;  // indice de la phrase � afficher
+
+    // tableau de 11 cha�nes de 100 caract�res pour les phrases d'instructions
+    char texte[11][100];
 
     // declaration des phrases d'instruction
     strcpy(texte[0], "***NUMBER MATCH***\n");
@@ -35,11 +39,11 @@ void afficher_instructions() {
     strcpy(texte[9], "Elim. couple separe: 4  pts       ??: Indince         ");
     strcpy(texte[10], "Vide ligne:          10 pts       XX: Quitter        ");
 
-    // boucle FOR pour imprimer le texte bien centré
+    // boucle FOR pour imprimer le texte bien centr�
     // print un buffer (texte vide) de longueur (width - longueur du texte) / 2)
-    // cela place le curseur a la bonne pos. pour print la phrase centrée
+    // cela place le curseur a la bonne pos. pour print la phrase centr�e
     // ensuite on imprime chaque phrase du tableau
-    for (int i = 0; i < 11; i++) {
+    for (i = 0; i < 11; i++) {
         printf("%*s%s\n", (WIDTH_CONSOLE - strlen(texte[i])) / 2, "", texte[i]);
     }
 
@@ -70,8 +74,9 @@ void message(const char* mess) {
 
 /*****************************************************************************/
 void mess_erreur(const char* mess) {
+    int i;  // compteur de clignotements
     /* affiche un message d'erreur � la ligne 3 en ROUGE avec clignotements! */
-    for (int i = 0; i < 5; i++) {   //faire clignoter 5 fois
+    for (i = 0; i < 5; i++) {   // 5 clignotements
         gotoxy(COL_MESSAGE, LIG_MESSAGES);
         textcolor(LIGHTRED);
         printf("%s", mess);         //afficher
@@ -85,8 +90,9 @@ void mess_erreur(const char* mess) {
 
 /*****************************************************************************/
 void mess_points(int pts) {
+    int i;  // compteur de clignotements
     /* affiche les points obtenus � la ligne 1 en VERT avec clignotements! */
-    for (int i = 0; i < 3; i++) {    //faire clignoter 3 fois
+    for (i = 0; i < 3; i++) {    // 3 clignotements
         gotoxy(COL_MESSAGE + 20, LIG_POINTS);
         textcolor(LIGHTGREEN);
         printf("+%d points!!", pts); //afficher
@@ -102,15 +108,16 @@ void mess_points(int pts) {
 
 /*---------------------- afficher_infos_jeu() ---------------------------*/
 void afficher_infos_jeu(const t_tab_chiffres nbr_chiffres, int pts) {
-    int i;  // Compteur pour passer tous les chiffres possibles
+    int i;  // compteur pour passer chaque chiffre possible (1 � CH_MAX)
 
-    char str_score[] = "Score: ";   // Texte pour la ligne de score
-    char str_chiffres[] = "Chiffres: "; // Texte pour la ligne des chiffres restants
+    char str_score[] = "Score: ";       // libell� pr�fixe de la ligne de score
+    // libell� pr�fixe de la ligne des chiffres restants
+    char str_chiffres[] = "Chiffres: ";
 
-    int centre = WIDTH_CONSOLE / 2, // Centre de la console
+    int centre = WIDTH_CONSOLE / 2, // colonne centrale de la console pour le centrage
 
-        // Calcul pour centrer la ligne du score. On retire a la valeur du centre
-        //la moitie de: la longueur du string + nb de cases pour le pointage.
+        // Calcul pour centrer la ligne du score. On retire au centre
+        // la moiti� de: la longueur du libell� + nb de positions pour le pointage.
         x_score = centre - ((strlen(str_score) + NB_POSI_SCORE) / 2);
 
     clrscr();
@@ -136,8 +143,9 @@ void afficher_infos_jeu(const t_tab_chiffres nbr_chiffres, int pts) {
 
 /*------------------------- afficher_grille() ---------------------------*/
 void afficher_grille(const t_grille_nos grille, int dern_lig) {
-    int lig, col;
-    char indices_col[] = "ABCDEFGHI";   // Labels des colonnes A a I (colonnes 1 a 9)
+    int lig,    // indice de ligne courante pour le parcours de la grille
+        col;    // indice de colonne courante pour le parcours de la grille
+    char indices_col[] = "ABCDEFGHI"; // labels des colonnes A � I (colonnes 1 � 9)
 
     // Afficher les en-tetes de colonnes sur la ligne au-dessus de la grille
     gotoxy(COL_LETTRES, LIG_GRILLE - 1);

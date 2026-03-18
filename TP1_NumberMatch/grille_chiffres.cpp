@@ -1,10 +1,11 @@
 // grille_chiffres.cpp
 // Auteur: F�lix Nadeau et Jean-Christophe Latreille
-// Date (derni�re modif.): 8/3/2026
+// Date (derni�re modif.): 16/3/2026
 // 
 // Module de gestion et initialisation de la grille de chiffres
 /**********************CONSTANTES***********************/
 
+// 8 directions cardinales + case centrale pour le parcours de voisinage dans la grille
 enum directions { S_OUEST = 1, SUD, S_EST, OUEST, MILIEU, EST, N_OUEST, NORD, N_EST };
 
 /************ COMMANDES DE PR�PROCESSEUR **************/
@@ -29,13 +30,40 @@ enum directions { S_OUEST = 1, SUD, S_EST, OUEST, MILIEU, EST, N_OUEST, NORD, N_
 
 /*******************FONCTIONS PRIVEES******************/
 
+//V�rifie dans les 8 directions cardinales s'il existe un coup valide
+//� partir de [ligne, colonne]. Si un couple valide est trouv� et absent
+//de la liste, il y est ajout�.
+//NOTE: le cas sp�cial de la direction EST est d�l�gu� � verifier_sens_est().
+//PARAM.: la grille de jeu, la position-ligne et colonne actuelle,
+//        la liste des coups possibles
+//RETOUR: aucun
 void verifier_huit_directions(const t_grille_nos grille, int ligne, int colonne,
     t_liste_couples liste);
 
-void verifier_sens_est(const t_grille_nos grille, int ligne, int colonne, t_liste_couples liste);
+//V�rifie le sens EST (vers la droite), avec passage automatique � la ligne
+//suivante si n�cessaire. Permet de d�tecter les couples valides entre la fin
+//d'une ligne et le d�but de la suivante.
+//Si un couple valide est trouv� et absent de la liste, il y est ajout�.
+//PARAM.: la grille de jeu, la position-ligne et colonne actuelle,
+//        la liste des coups possibles
+//RETOUR: aucun
+void verifier_sens_est(const t_grille_nos grille, int ligne, int colonne,
+    t_liste_couples liste);
 
+//V�rifie que le chiffre "a_inserer" n'est pas d�j� pr�sent dans les cases
+//adjacentes � [lig, col].
+//PARAM.: la grille de jeu, la position-ligne et colonne, le chiffre � ins�rer
+//RETOUR: 1 si aucun voisin imm�diat n'a la m�me valeur, 0 sinon
 int verifier_ch_voisin(t_grille_nos grille, int lig, int col, int a_inserer);
 
+//Trouve les coordonn�es de la premi�re case vide apr�s le dernier chiffre
+//de la ligne "*ligne". La r�f�rence-ligne doit �tre initialis�e avec la
+//derni�re ligne active de la grille.
+//Cas sp�cial: si toute la derni�re ligne est occup�e, pointe au d�but de
+//la ligne suivante.
+//PARAM.: la grille de jeu, une r�f�rence � la ligne et � la colonne
+//        (modifi�es en sortie)
+//RETOUR: aucun, mais (*ligne, *colonne) d�signent la premi�re case vide
 void trouver_fin_chiffres(t_grille_nos grille, int* ligne, int* colonne);
 
 /*-------------------- verifier_huit_directions() -----------------------*/
@@ -43,11 +71,13 @@ void trouver_fin_chiffres(t_grille_nos grille, int* ligne, int* colonne);
 void verifier_huit_directions(const t_grille_nos grille, int ligne, int colonne,
     t_liste_couples liste) {
 
-    int direction,  // Variable de la direction du d�placement
-        lig2, col2, // Ligne et colonne ajust�e en fonction de la direction
-        delta_lig, delta_col,   // Valeur de d�placement selon la direction
-        chiffre_depart, chiffre_final,  // Valeurs des deux chiffres � v�rifier
-        caseA, caseB;   // Valeurs � ajouter � la liste des coups
+    int direction,          // indice de direction courante dans l'�num. directions
+        lig2, col2,         // ligne et colonne de la case cible apr�s d�placement
+        delta_lig,          // valeur de d�placement en lignes selon la direction
+        delta_col,          // valeur de d�placement en colonnes selon la direction
+        chiffre_depart,     // valeur du chiffre de la case de d�part
+        chiffre_final,      // valeur du chiffre de la case cible trouv�e
+        caseA, caseB;       // positions encod�es (lig*10+col) des deux cases du couple
 
     chiffre_depart = grille[ligne][colonne];    // D�finition de la valeur de d�part
 
@@ -81,12 +111,12 @@ void verifier_huit_directions(const t_grille_nos grille, int ligne, int colonne,
             continue; // Case centrale, on passe � la prochaine direction
 
             // Cas particulier: On utilise une sous-fonction sp�ciale pour v�rifier la
-            // direction "EST". Cette sous-fonction priv�e g�re tout pour l'ajout � la liste
-            // de coups.
+            // direction "EST". Cette sous-fonction priv�e g�re tout
+            // pour l'ajout � la liste de coups.
         case EST:
-            verifier_sens_est(grille, ligne, colonne, liste);   // G�re le cas particulier
-            // On passe � la prochaine direction puisque les prochaines �tapes sont d�j�
-            // g�r�es.
+            verifier_sens_est(grille, ligne, colonne, liste);
+            // On passe � la prochaine direction puisque les prochaines
+            // �tapes sont d�j� g�r�es.
             continue;
 
         case N_OUEST:
@@ -144,12 +174,14 @@ void verifier_huit_directions(const t_grille_nos grille, int ligne, int colonne,
 
 /*------------------------- verifier_sens_est() -------------------------*/
 
-void verifier_sens_est(const t_grille_nos grille, int ligne, int colonne, t_liste_couples liste) {
-    int lig2 = ligne,
-        col2 = colonne,
-        chiffre_depart = grille[ligne][colonne],
-        chiffre_final,
-        caseA, caseB;
+void verifier_sens_est(const t_grille_nos grille, int ligne, int colonne,
+    t_liste_couples liste) {
+    int lig2 = ligne,                           // ligne courante lors du parcours vers l'est
+        col2 = colonne,                         // colonne courante lors du parcours vers l'est
+        chiffre_depart = grille[ligne][colonne], // valeur du chiffre de la case de d�part
+        chiffre_final,                          // valeur du chiffre de la case cible trouv�e
+        caseA,      // position encod�e (lig*10+col) de la case de d�part
+        caseB;      // position encod�e (lig*10+col) de la case cible
 
     INC_POS(lig2, col2);
 
@@ -175,11 +207,14 @@ void verifier_sens_est(const t_grille_nos grille, int ligne, int colonne, t_list
 
 int verifier_ch_voisin(t_grille_nos grille, int lig, int col, int a_inserer) {
 
+    int i,  // d�calage de ligne pour le parcours du voisinage (-1, 0, 1)
+        j;  // d�calage de colonne pour le parcours du voisinage (-1, 0, 1)
+
     /*Boucle FOR o� i = D�CALAGE LIGNE*/
-    for (int i = -1; i <= 1; i++) {
+    for (i = -1; i <= 1; i++) {
 
         /*Boucle FOR o� j = D�CALAGE COLONNE*/
-        for (int j = -1; j <= 1; j++) {
+        for (j = -1; j <= 1; j++) {
 
             /*V�rification des bornes avant acc�s au tableau*/
             if (lig + i < 0 || lig + i >= MAX_LIG) continue;
@@ -195,7 +230,7 @@ int verifier_ch_voisin(t_grille_nos grille, int lig, int col, int a_inserer) {
 /*---------------------- trouver_fin_chiffres() -------------------------*/
 void trouver_fin_chiffres(t_grille_nos grille, int* ligne, int* colonne) {
 
-    int compte = 0;
+    int compte = 0; // compteur de chiffres non-vides rencontr�s sur la ligne courante
 
     // Parcourir de gauche a droite en comptant les cases non-vides
     // jusqu'a avoir compte autant de chiffres que l'indique le compteur de la ligne
@@ -216,11 +251,13 @@ void trouver_fin_chiffres(t_grille_nos grille, int* ligne, int* colonne) {
 
 int init_grille(t_grille_nos grille, t_tab_chiffres nbr_chiffres) {
 
-    int r, k,
-        lig = 0,				 // Coordonn�e y du tableau
-        col = 0,				 // Coordonn�e x du tableau
-        val_a_inserer = 0,		 // Valeur � ins�rer dans la grille
-        qte_a_inserer = 0;		 // Quantit� de valeurs � ins�rer dans la grille
+    int r,                       // indice de ligne pour la r�initialisation de la grille
+        k,                       // indice pour la r�initialisation du tableau nbr_chiffres
+        c,                       // indice de colonne pour la r�initialisation de la grille
+        lig = 0,                 // coordonn�e ligne courante d'insertion dans la grille
+        col = 0,                 // coordonn�e colonne courante d'insertion dans la grille
+        val_a_inserer = 0,       // valeur al�atoire choisie � placer dans la case courante
+        qte_a_inserer = 0;       // quantit� totale de chiffres � ins�rer dans la grille
 
     /***************************/
 
@@ -232,16 +269,17 @@ int init_grille(t_grille_nos grille, t_tab_chiffres nbr_chiffres) {
         lig = 0;				 // R�initialisation des coordonn�es init avant chaque essai
         col = 0;				 // Sinon, chaque essai d�cale la position des valeurs
 
-        /*R�initialisation de la grille et du tableau nbr_chiffres avant chaque essai
-        * Sans cela, les valeurs r�siduelles du pr�c�dent essai corrompraient les r�sultats*/
+        /*R�initialisation de la grille et du tableau nbr_chiffres avant chaque essai.
+        * Sans cela, les valeurs r�siduelles du pr�c�dent essai
+        * corrompraient les r�sultats*/
         for (r = 0; r < MAX_LIG; r++)
-            for (int c = 0; c < NB_COL; c++)
+            for (c = 0; c < NB_COL; c++)
                 grille[r][c] = 0;
         for (k = 0; k < NB_COL; k++)
             nbr_chiffres[k] = 0;
 
-        /*D�cision al�atoire de la quantit� de valeurs � ins�rer (min = 36 ; max = 45)
-        * La valeur est incr�ment�e de 1 si elle est impaire*/
+        /*D�cision al�atoire de la quantit� de valeurs � ins�rer
+        * (min = 36 ; max = 45). La valeur est incr�ment�e de 1 si impaire*/
 
         qte_a_inserer = (reel_aleatoire(4.0, 5.0) * 9);
         if (qte_a_inserer % 2) qte_a_inserer++;
@@ -271,7 +309,8 @@ int init_grille(t_grille_nos grille, t_tab_chiffres nbr_chiffres) {
 
             /*Remplissage du tableau de quantit� de chiffres disponibles
             * Index 0		: Incr�ment� � la premi�re insertion de chaque valeur
-            * Indexes 1 � 9 : Incr�ment�s � chaque insertion de leur valeur correspondante*/
+            * Indexes 1 � 9 : Incr�ment�s � chaque insertion de la valeur
+            * correspondante*/
 
             nbr_chiffres[val_a_inserer]++;
             if (nbr_chiffres[val_a_inserer] == 1) nbr_chiffres[0]++;
@@ -286,7 +325,8 @@ int init_grille(t_grille_nos grille, t_tab_chiffres nbr_chiffres) {
 
 int generer_listes_couples(const t_grille_nos grille, int dern_lig, t_liste_couples liste) {
 
-    int i, j;   // Indices de ligne et de colonne
+    int i,  // indice de ligne pour le parcours de la grille
+        j;  // indice de colonne pour le parcours de la grille
 
 
     // Cet algorithme permet de passer chaque case non-vide de la grille afin de trouver tous
@@ -306,7 +346,8 @@ int generer_listes_couples(const t_grille_nos grille, int dern_lig, t_liste_coup
 
 /*-------------------------- retirer_ligne() ----------------------------*/
 void retirer_ligne(t_grille_nos grille, int no_lig) {
-    int i, j;
+    int i,  // indice de la ligne � d�placer vers le haut
+        j;  // indice de colonne pour recopier chaque case de la ligne
 
     for (i = no_lig; i < MAX_LIG; i++) {
         if (i != MAX_LIG - 1) {
@@ -321,8 +362,8 @@ void retirer_ligne(t_grille_nos grille, int no_lig) {
 
 /*------------------------- effacer_chiffre() ---------------------------*/
 void effacer_chiffre(t_grille_nos grille, int pos) {
-    int lig = pos / 10,
-        col = pos % 10;
+    int lig = pos / 10,     // indice de ligne extrait de la position encod�e
+        col = pos % 10;     // indice de colonne extrait de la position encod�e
 
     grille[lig][col] = 0;
     grille[lig][POS_NB] -= 1;
@@ -341,9 +382,9 @@ int  retirer_chiffre(int ch, t_tab_chiffres nbr_chiffres) {
 
 /*------------------------- get_chiffre_case() --------------------------*/
 int  get_chiffre_case(const t_grille_nos grille, int no_case) {
-    int lig = no_case / 10,
-        col = no_case % 10,
-        ch = grille[lig][col];
+    int lig = no_case / 10,     // indice de ligne extrait de la position encod�e
+        col = no_case % 10,     // indice de colonne extrait de la position encod�e
+        ch = grille[lig][col];  // valeur du chiffre lu dans la case
 
     return ch;
 }
@@ -356,11 +397,11 @@ int  nb_chiffres_restants(const t_tab_chiffres nbr_chiffres) {
 /*------------------------- ajouter_chiffres() --------------------------*/
 void ajouter_chiffres(t_grille_nos grille, t_tab_chiffres nbr_chiffres, int* dern_lig) {
 
-    int lig = *dern_lig - 1,    // Derniere ligne avec des donnees
-        col,
-        val_a_inserer,
-        qte_a_inserer,
-        i;
+    int lig = *dern_lig - 1,    // derni�re ligne contenant des donn�es (point de d�part)
+        col,                    // colonne courante d'insertion des nouveaux chiffres
+        val_a_inserer,          // valeur al�atoire choisie � placer dans la case courante
+        qte_a_inserer,          // quantit� de chiffres � ajouter (calcul al�atoire)
+        i;                      // compteur de boucle (non utilis� apr�s init)
 
     trouver_fin_chiffres(grille, &lig, &col);
 

@@ -19,8 +19,6 @@
 #define COL_TAILLE  0			//position-colonne de la taille totale (à la ligne [0])
 #define COL_NBELEM  1			//position-colonne du nb. d'éléments (à la ligne [0])
 
-#define TEST_LISTE_COUPLES 0	//permet de passer en mode test pour les tests unitaires
-
 /******************* DÉCLARATION DES TYPES *********************/
 //Type-tableau pour la liste. Contient 2 colonnes pour les deux cases à jouer.
 typedef int t_liste_couples[MAX_COUPLES + 1][2];   //eg. 24 - 34 (== "D3" - "D4")
